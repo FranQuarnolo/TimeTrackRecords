@@ -1,20 +1,28 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Timer, PlusCircle, Flag } from "lucide-react";
+import { Timer, PlusCircle } from "lucide-react";
 import { Header } from "@/components/layout/header";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col relative">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-[-1]">
+        <Image
+          src="/background.png"
+          alt="Background"
+          fill
+          className="object-cover blur-sm brightness-50"
+          priority
+        />
+      </div>
+
       <Header />
       <main className="flex-1 flex flex-col items-center justify-center gap-8 p-4 relative">
-        <div className="w-40 h-40 rounded-full bg-muted flex items-center justify-center mb-4 overflow-hidden border-4 border-primary/20 shadow-xl">
-          {/* Placeholder Logo */}
-          <Timer className="h-20 w-20 text-primary" />
-        </div>
 
         <div className="w-full max-w-sm">
-          <Button asChild size="lg" className="w-full h-24 text-2xl rounded-2xl shadow-lg" variant="secondary">
+          <Button asChild size="lg" className="w-full h-24 text-2xl rounded-2xl shadow-lg backdrop-blur-md bg-background/80 hover:bg-background/90 text-foreground border-2 border-primary/20" variant="secondary">
             <Link href="/mis-tiempos" className="flex flex-col gap-2 items-center justify-center">
               <Timer className="h-8 w-8" />
               Mis Tiempos
