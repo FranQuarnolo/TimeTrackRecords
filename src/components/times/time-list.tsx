@@ -1,7 +1,7 @@
 "use client"
 
 import { useStore } from "@/lib/store";
-import { formatTime } from "@/lib/utils";
+import { formatTime, cn } from "@/lib/utils";
 import { SessionType } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -36,34 +36,48 @@ export function TimeList({ type }: TimeListProps) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             {lapsByCircuit.map(({ circuit, laps }) => (
-                <Card key={circuit.id} className="overflow-hidden">
-                    <CardHeader className="bg-muted/50 pb-2">
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                            {circuit.name}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <ul className="divide-y">
-                            {laps.map((lap, index) => (
-                                <li key={lap.id} className="flex items-center justify-between p-3 hover:bg-muted/30 transition-colors">
-                                    <div className="flex items-center gap-3">
-                                        <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${index === 0 ? 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400' : 'bg-muted text-muted-foreground'}`}>
+                <div key={circuit.id} className="space-y-4">
+                    <div className="flex items-center gap-2 border-b pb-2">
+                        <h3 className="text-xl font-bold">{circuit.name}</h3>
+                    </div>
+                    <div className="space-y-3">
+                        {laps.map((lap, index) => {
+                            let medalColor = "bg-muted text-muted-foreground";
+                            if (index === 0) medalColor = "bg-yellow-400 text-yellow-900 ring-2 ring-yellow-400/50";
+                            if (index === 1) medalColor = "bg-slate-300 text-slate-900 ring-2 ring-slate-300/50";
+                            if (index === 2) medalColor = "bg-amber-600 text-amber-100 ring-2 ring-amber-600/50";
+
+                            return (
+                                <div
+                                    key={lap.id}
+                                    className="flex items-center justify-between gap-4 p-3 rounded-xl bg-card border shadow-sm"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className={cn(
+                                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-lg shadow-sm",
+                                            medalColor
+                                        )}>
                                             {index + 1}
-                                        </span>
-                                        <span className="font-mono text-lg font-medium">
-                                            {formatTime(lap.time)}
-                                        </span>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-3xl font-mono font-bold tracking-tight">
+                                                {formatTime(lap.time)}
+                                            </span>
+                                            <span className="text-sm text-muted-foreground font-medium">
+                                                {lap.carModel || 'Sin modelo'}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span className="text-xs text-muted-foreground">
+                                    <span className="text-xs text-muted-foreground font-medium bg-muted px-2 py-1 rounded-full">
                                         {new Date(lap.date).toLocaleDateString()}
                                     </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                </Card>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             ))}
         </div>
     );

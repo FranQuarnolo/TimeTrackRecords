@@ -1,46 +1,42 @@
-# TimeTracksRecords
+# 🏁 TimeTracksRecords
 
-TimeTracksRecords is a mobile-first web application designed for racing enthusiasts to track and manage their lap times across various circuits. Built with Next.js, TypeScript, and Tailwind CSS, it offers a premium, dark-mode-first experience.
+**TimeTracksRecords** es una aplicación web mobile-first diseñada para entusiastas de las carreras, permitiéndote registrar y gestionar tus tiempos de vuelta en diversos circuitos. Construida con Next.js, TypeScript y Tailwind CSS, ofrece una experiencia premium con soporte nativo para modo oscuro y temas de escuderías.
 
-## Features
+## ✨ Características
 
--   **My Times (Mis Tiempos)**: View your lap times categorized by "Qualifying" and "Race". Times are grouped by circuit and sorted by best performance.
--   **Load Time (Cargar Tiempo)**: A streamlined wizard to record new lap times:
-    1.  **Select Circuit**: Visual list of circuits with immersive imagery.
-    2.  **Select Session**: Choose between Qualifying or Race (displays your current Personal Best).
-    3.  **Enter Time**: Custom "flip-style" number picker for precise time entry (Minutes:Seconds.Milliseconds).
--   **Dark/Light Mode**: Fully supported themes with a persistent toggle.
--   **Mobile First**: Optimized for touch interactions and mobile viewports.
--   **Local Storage**: All data is persisted locally on your device.
+-   **⏱️ Mis Tiempos**: Visualiza tus tiempos de vuelta categorizados por "Clasificación" y "Carrera".
+    -   **Top 5**: El sistema guarda automáticamente solo tus 5 mejores tiempos por circuito y sesión.
+    -   **Medallas**: Los 3 mejores tiempos reciben medallas de Oro, Plata y Bronce.
+-   **🏎️ Cargar Tiempo**: Un asistente paso a paso para registrar nuevos tiempos:
+    1.  **Seleccionar Circuito**: Lista visual con **Buscador Flotante (FAB)** y filtros mejorados (incluyendo "Favoritos").
+    2.  **Seleccionar Sesión**: Elige entre Clasificación o Carrera.
+    3.  **Ingresar Tiempo**: Selector preciso con milisegundos (3 dígitos) y selección de auto (WEC, F1, etc.).
+-   **🎨 Temas de Escuderías**: Personaliza la app con los colores de tu equipo favorito (Ferrari, Mercedes, Red Bull, etc.) además del modo Claro/Oscuro.
+-   **📱 Mobile First**: Optimizada para interacciones táctiles y pantallas de móviles.
+-   **💾 Guardado Local**: Todos los datos se guardan localmente en tu dispositivo.
 
-## Tech Stack
+## 🛠️ Tecnologías
 
 -   **Framework**: Next.js 15 (App Router)
--   **Language**: TypeScript
--   **Styling**: Tailwind CSS v4
--   **State Management**: Zustand (with persist middleware)
--   **Animations**: Framer Motion
--   **Icons**: Lucide React
--   **UI Components**: Custom components built with Radix UI primitives (shadcn/ui inspired).
+-   **Lenguaje**: TypeScript
+-   **Estilos**: Tailwind CSS v4
+-   **Estado**: Zustand (con persistencia)
+-   **Animaciones**: Framer Motion, Vaul (Drawer)
+-   **Iconos**: Lucide React
 
-## Getting Started
+## 🚀 Comenzando
 
-1.  Clone the repository.
-2.  Install dependencies:
+1.  Clona el repositorio.
+2.  Instala las dependencias:
     ```bash
     npm install
     ```
-3.  Run the development server:
+3.  Corre el servidor de desarrollo:
     ```bash
     npm run dev
     ```
-4.  Open [http://localhost:3000](http://localhost:3000) with your browser.
+4.  Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-## Deployment
+## ⚙️ Configuración
 
-This project is optimized for deployment on [Vercel](https://vercel.com).
-Simply import the repository into Vercel and deploy.
-
-## Configuration
-
-Access the settings menu via the gear icon in the top right corner to toggle between Dark and Light themes.
+Accede al menú de configuración a través del icono de engranaje en la esquina superior derecha para cambiar entre temas Claro/Oscuro y seleccionar tu Escudería favorita.
