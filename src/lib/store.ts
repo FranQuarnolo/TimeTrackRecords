@@ -41,26 +41,31 @@ const INITIAL_CIRCUITS: Circuit[] = [
 
 const INITIAL_CARS: Car[] = [
     // Hypercar
-    { id: 'ferrari_499p', name: 'Ferrari 499P', category: 'WEC' },
-    { id: 'toyota_gr010', name: 'Toyota GR010', category: 'WEC' },
-    { id: 'porsche_963', name: 'Porsche 963', category: 'WEC' },
-    { id: 'cadillac_vseries', name: 'Cadillac V-Series.R', category: 'WEC' },
-    { id: 'peugeot_9x8', name: 'Peugeot 9X8', category: 'WEC' },
-    { id: 'bmw_m_hybrid', name: 'BMW M Hybrid V8', category: 'WEC' },
-    { id: 'lamborghini_sc63', name: 'Lamborghini SC63', category: 'WEC' },
-    { id: 'isotta_tipo6', name: 'Isotta Fraschini Tipo 6', category: 'WEC' },
+    { id: 'ferrari_499p', name: 'Ferrari 499P', category: 'WEC', brand: 'Ferrari' },
+    { id: 'toyota_gr010', name: 'Toyota GR010', category: 'WEC', brand: 'Toyota' },
+    { id: 'porsche_963', name: 'Porsche 963', category: 'WEC', brand: 'Porsche' },
+    { id: 'cadillac_vseries', name: 'Cadillac V-Series.R', category: 'WEC', brand: 'Cadillac' },
+    { id: 'peugeot_9x8', name: 'Peugeot 9X8', category: 'WEC', brand: 'Peugeot' },
+    { id: 'bmw_m_hybrid', name: 'BMW M Hybrid V8', category: 'WEC', brand: 'BMW' },
+    { id: 'lamborghini_sc63', name: 'Lamborghini SC63', category: 'WEC', brand: 'Lamborghini' },
+    { id: 'isotta_tipo6', name: 'Isotta Fraschini Tipo 6', category: 'WEC', brand: 'Isotta Fraschini' },
     // LMGT3
-    { id: 'ferrari_296_gt3', name: 'Ferrari 296 GT3', category: 'GT3' },
-    { id: 'porsche_911_gt3_r', name: 'Porsche 911 GT3 R', category: 'GT3' },
-    { id: 'bmw_m4_gt3', name: 'BMW M4 GT3', category: 'GT3' },
-    { id: 'aston_martin_vantage', name: 'Aston Martin Vantage AMR GT3', category: 'GT3' },
-    { id: 'mclaren_720s_evo', name: 'McLaren 720S GT3 Evo', category: 'GT3' },
-    { id: 'lamborghini_huracan_evo2', name: 'Lamborghini Huracán GT3 Evo2', category: 'GT3' },
-    { id: 'ford_mustang_gt3', name: 'Ford Mustang GT3', category: 'GT3' },
-    { id: 'lexus_rc_f_gt3', name: 'Lexus RC F GT3', category: 'GT3' },
-    { id: 'corvette_z06_gt3r', name: 'Corvette Z06 GT3.R', category: 'GT3' },
+    { id: 'aston_martin_vantage', name: 'Aston Martin Vantage GT3', category: 'GT3', brand: 'Aston Martin' },
+    { id: 'bmw_m4_gt3', name: 'BMW M4 GT3', category: 'GT3', brand: 'BMW' },
+    { id: 'ferrari_296_gt3', name: 'Ferrari 296 GT3', category: 'GT3', brand: 'Ferrari' },
+    { id: 'mclaren_720s_evo', name: 'McLaren 720S GT3 Evo', category: 'GT3', brand: 'McLaren' },
+    { id: 'lamborghini_huracan_evo2', name: 'Lamborghini Huracan GT3 EVO2', category: 'GT3', brand: 'Lamborghini' },
+    { id: 'ford_mustang_gt3', name: 'Ford Mustang GT3', category: 'GT3', brand: 'Ford' },
+    { id: 'lexus_rc_f_gt3', name: 'Lexus RC F GT3', category: 'GT3', brand: 'Lexus' },
+    { id: 'corvette_z06_gt3r', name: 'Corvette Z06 GT3.R', category: 'GT3', brand: 'Corvette' },
+    // TC Argentina 2025
+    { id: 'chevrolet_camaro_zl1', name: 'Chevrolet Camaro ZL1', category: 'TC', brand: 'Chevrolet' },
+    { id: 'ford_mustang_mach_1', name: 'Ford Mustang Mach I', category: 'TC', brand: 'Ford' },
+    { id: 'toyota_camry_tc', name: 'Toyota Camry TC', category: 'TC', brand: 'Toyota' },
+    { id: 'dodge_challenger_srt', name: 'Dodge Challenger SRT', category: 'TC', brand: 'Dodge' },
+    { id: 'torino_cherokee', name: 'Torino Cherokee', category: 'TC', brand: 'Torino' },
     // Other
-    { id: 'f1_generic', name: 'Formula 1 Car', category: 'F1' },
+    { id: 'f1_generic', name: 'Formula 1 Car', category: 'F1', brand: 'F1' },
 ];
 
 export const useStore = create<AppState>()(
@@ -79,17 +84,15 @@ export const useStore = create<AppState>()(
                 // Combine with new lap
                 const allLaps = [...existingLaps, lap];
 
-                // Sort by time (asc) and take top 5
-                const top5Laps = allLaps
-                    .sort((a, b) => a.time - b.time)
-                    .slice(0, 5);
+                // Sort by time (asc)
+                const sortedLaps = allLaps.sort((a, b) => a.time - b.time);
 
                 // Get laps that are NOT for this circuit/type (to preserve them)
                 const otherLaps = state.laps.filter(
                     l => !(l.circuitId === lap.circuitId && l.type === lap.type)
                 );
 
-                return { laps: [...otherLaps, ...top5Laps] };
+                return { laps: [...otherLaps, ...sortedLaps] };
             }),
             getBestTime: (circuitId, type) => {
                 const { laps } = get();

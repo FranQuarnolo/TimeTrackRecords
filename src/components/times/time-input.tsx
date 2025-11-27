@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Circuit, SessionType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Car as CarIcon, Save } from "lucide-react";
-import { useStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
+import { CarSelector } from "./car-selector";
 
 interface TimeInputProps {
     circuit: Circuit;
@@ -15,7 +14,6 @@ interface TimeInputProps {
 }
 
 export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
-    const { cars } = useStore();
     const [minutes, setMinutes] = useState(1);
     const [seconds, setSeconds] = useState(30);
     const [milliseconds, setMilliseconds] = useState(0);
@@ -70,22 +68,7 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
                         <CarIcon className="h-5 w-5" />
                         Auto / Vehículo
                     </label>
-                    <div className="relative">
-                        <input
-                            list="cars-list"
-                            type="text"
-                            placeholder="Ej: Ferrari 499P"
-                            className="flex h-16 w-full rounded-2xl border-2 border-input bg-background/50 px-6 py-4 text-xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:border-primary focus-visible:ring-0 shadow-sm transition-all"
-                            value={selectedCar}
-                            onChange={(e) => setSelectedCar(e.target.value)}
-                        />
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 transition-opacity peer-focus:opacity-100" />
-                    </div>
-                    <datalist id="cars-list">
-                        {cars.map((car) => (
-                            <option key={car.id} value={car.name} />
-                        ))}
-                    </datalist>
+                    <CarSelector value={selectedCar} onSelect={setSelectedCar} />
                 </div>
             </div>
 
@@ -102,8 +85,17 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
 }
 
 function NumberPicker({ value, onChange, max, label, digits = 2 }: { value: number, onChange: (v: number) => void, max: number, label: string, digits?: number }) {
+
+    const handleWheel = (e: React.WheelEvent) => {
+        if (e.deltaY < 0) {
+            onChange(value >= max ? 0 : value + 1);
+        } else {
+            onChange(value <= 0 ? max : value - 1);
+        }
+    };
+
     return (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4" onWheel={handleWheel}>
             <Button
                 variant="ghost"
                 size="icon"
@@ -112,7 +104,7 @@ function NumberPicker({ value, onChange, max, label, digits = 2 }: { value: numb
             >
                 ▲
             </Button>
-            <div className="bg-muted/50 rounded-xl min-w-[3ch] h-24 flex items-center justify-center border-b-4 border-transparent focus-within:border-primary hover:border-accent-secondary transition-colors">
+            <div className="bg-muted/50 rounded-xl min-w-[3ch] h-24 flex items-center justify-center border-b-4 border-transparent focus-within:border-primary hover:border-accent-secondary transition-colors cursor-ns-resize">
                 {value.toString().padStart(digits, '0')}
             </div>
             <Button
