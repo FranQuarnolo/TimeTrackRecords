@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { useStore } from "@/lib/store";
 import { formatTime, cn } from "@/lib/utils";
 import { SessionType } from "@/types";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface TimeListProps {
     type: SessionType;
