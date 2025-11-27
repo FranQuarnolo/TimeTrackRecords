@@ -54,6 +54,7 @@
   --primary: #ff2800;
   --primary-foreground: #ffffff;
   --ring: #ff2800;
+  --border: #ff2800;
   --accent-secondary: #fff200;
 }
 
@@ -62,6 +63,7 @@
   --primary: #00d2be;
   --primary-foreground: #000000;
   --ring: #00d2be;
+  --border: #00d2be;
   --accent-secondary: #c0c0c0;
 }
 
@@ -70,6 +72,7 @@
   --primary: #0600ef;
   --primary-foreground: #ffffff;
   --ring: #0600ef;
+  --border: #0600ef;
   --accent-secondary: #cc1e4a;
 }
 
@@ -78,6 +81,7 @@
   --primary: #ff8000;
   --primary-foreground: #000000;
   --ring: #ff8000;
+  --border: #ff8000;
   --accent-secondary: #47c7fc;
 }
 
@@ -86,6 +90,7 @@
   --primary: #006f62;
   --primary-foreground: #ffffff;
   --ring: #006f62;
+  --border: #006f62;
   --accent-secondary: #cedc00;
 }
 
@@ -94,6 +99,7 @@
   --primary: #ffffff;
   --primary-foreground: #000000;
   --ring: #ffffff;
+  --border: #ffffff;
   --accent-secondary: #e6002b;
 }
 
@@ -102,6 +108,7 @@
   --primary: #d5001c;
   --primary-foreground: #ffffff;
   --ring: #d5001c;
+  --border: #d5001c;
   --accent-secondary: #c6a75b;
 }
 
@@ -110,6 +117,7 @@
   --primary: #0066b1;
   --primary-foreground: #ffffff;
   --ring: #0066b1;
+  --border: #0066b1;
   --accent-secondary: #e21c2b;
 }
 
@@ -118,6 +126,7 @@
   --primary: #ffaf00;
   --primary-foreground: #000000;
   --ring: #ffaf00;
+  --border: #ffaf00;
   --accent-secondary: #be2e21;
 }
 

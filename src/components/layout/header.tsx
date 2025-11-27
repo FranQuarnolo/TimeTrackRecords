@@ -1,6 +1,6 @@
 "use client"
 
-import { Flag, ChevronLeft } from "lucide-react";
+import { Flag, ChevronLeft, Timer } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeDrawer } from "@/components/theme-drawer";
@@ -20,7 +20,7 @@ export function Header() {
                         </Button>
                     )}
                     <div className="flex items-center gap-2 font-bold text-lg">
-                        <Flag className="h-5 w-5 text-primary" />
+                        <Timer className="h-8 w-8 text-primary" />
                         <span>TimeTracksRecords</span>
                     </div>
                 </div>

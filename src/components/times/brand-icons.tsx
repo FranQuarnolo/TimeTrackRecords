@@ -4,32 +4,45 @@ export const getBrandIcon = (brand?: string) => {
     if (!brand) return <Car className="h-5 w-5" />;
 
     const normalizedBrand = brand.toLowerCase().replace(/\s+/g, '');
+    const logoMap: Record<string, string> = {
+        'astonmartin': '/logos/aston_martin_logo_icon.svg',
+        'bmw': '/logos/bmw_logo_icon.svg',
+        'cadillac': '/logos/cadillac_logo_icon.svg',
+        'chevrolet': '/logos/chevrolet_logo_icon.svg',
+        'ferrari': '/logos/ferrari_logo_icon.svg',
+        'ford': '/logos/ford_logo_icon.svg',
+        'lamborghini': '/logos/lamborghini_logo_icon.svg',
+        'mercedes': '/logos/mercedes_benz_logo_icon.svg',
+        'peugeot': '/logos/peugeot_logo_icon.svg',
+        'porsche': '/logos/porsche_logo_icon.svg',
+        'toyota': '/logos/toyota_logo_icon.svg',
+    };
 
-    // We can use simple colored circles with initials or specific SVGs if available.
-    // For now, let's use a styled div with the first letter as a placeholder for a logo,
-    // or specific colors associated with the brands.
+    const logoPath = logoMap[normalizedBrand];
 
+    if (logoPath) {
+        return (
+            <div className="h-8 w-8 flex items-center justify-center">
+                <img
+                    src={logoPath}
+                    alt={`${brand} logo`}
+                    className="max-h-full max-w-full object-contain"
+                />
+            </div>
+        );
+    }
+
+    // Fallback for brands without logos
     const getBrandColor = (b: string) => {
         switch (b) {
-            case 'ferrari': return 'bg-red-600 text-white';
-            case 'mercedes': return 'bg-zinc-300 text-black';
             case 'redbull': return 'bg-blue-900 text-yellow-400';
             case 'mclaren': return 'bg-orange-500 text-black';
-            case 'astonmartin': return 'bg-green-800 text-white';
             case 'alpine': return 'bg-blue-600 text-white';
             case 'williams': return 'bg-blue-900 text-white';
             case 'haas': return 'bg-white text-red-600 border border-red-600';
             case 'sauber': return 'bg-green-500 text-black';
-            case 'porsche': return 'bg-yellow-500 text-black';
-            case 'bmw': return 'bg-blue-500 text-white';
-            case 'cadillac': return 'bg-yellow-600 text-black';
-            case 'toyota': return 'bg-red-600 text-white';
-            case 'peugeot': return 'bg-gray-500 text-white';
-            case 'lamborghini': return 'bg-yellow-400 text-black';
-            case 'ford': return 'bg-blue-700 text-white';
             case 'lexus': return 'bg-black text-white';
             case 'corvette': return 'bg-yellow-500 text-black';
-            case 'chevrolet': return 'bg-yellow-500 text-black';
             case 'dodge': return 'bg-red-700 text-white';
             case 'torino': return 'bg-gray-600 text-white';
             case 'isottafraschini': return 'bg-blue-800 text-white';
