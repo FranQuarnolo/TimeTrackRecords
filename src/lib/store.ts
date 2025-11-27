@@ -38,6 +38,17 @@ const INITIAL_CIRCUITS: Circuit[] = [
     { id: 'vegas', name: 'Las Vegas', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Vegas', country: 'USA', category: 'F1', isFavorite: false },
     { id: 'road_america', name: 'Road America', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Road+America', country: 'USA', category: 'Other', isFavorite: false },
     { id: 'qatar', name: 'Qatar', imageUrl: '/tracks/qatar.png', country: 'Qatar', category: 'F1', isFavorite: false },
+    // New Circuits
+    { id: 'kyalami', name: 'Kyalami', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Kyalami', country: 'South Africa', category: 'F1', isFavorite: false },
+    { id: 'sepang', name: 'Sepang', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Sepang', country: 'Malaysia', category: 'F1', isFavorite: false },
+    { id: 'estoril', name: 'Estoril', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Estoril', country: 'Portugal', category: 'F1', isFavorite: false },
+    { id: 'adelaide', name: 'Adelaide', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Adelaide', country: 'Australia', category: 'F1', isFavorite: false },
+    { id: 'magny_cours', name: 'Magny-Cours', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Magny-Cours', country: 'France', category: 'F1', isFavorite: false },
+    { id: 'hockenheim', name: 'Hockenheimring', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Hockenheim', country: 'Germany', category: 'F1', isFavorite: false },
+    { id: 'istanbul', name: 'Istanbul Park', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Istanbul', country: 'Turkey', category: 'F1', isFavorite: false },
+    { id: 'baku', name: 'Baku City Circuit', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Baku', country: 'Azerbaijan', category: 'F1', isFavorite: false },
+    { id: 'singapore', name: 'Marina Bay', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Singapore', country: 'Singapore', category: 'F1', isFavorite: false },
+    { id: 'yas_marina', name: 'Yas Marina', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Yas+Marina', country: 'UAE', category: 'F1', isFavorite: false },
 ];
 
 const INITIAL_CARS: Car[] = [

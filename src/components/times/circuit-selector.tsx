@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import { Circuit } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Star, X } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -85,17 +86,21 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.2 }}
-                                className="relative h-48 w-full overflow-hidden rounded-xl border bg-card shadow-sm hover:shadow-md transition-shadow group"
+                                className="relative h-48 w-full overflow-hidden rounded-xl border-2 border-border bg-card shadow-sm hover:shadow-md transition-shadow group"
                             >
                                 {/* Clickable Area */}
                                 <div
                                     className="absolute inset-0 cursor-pointer z-0"
                                     onClick={() => onSelect(circuit)}
                                 >
-                                    <div
-                                        className="absolute inset-0 bg-cover bg-center transition-transform hover:scale-105 duration-500"
-                                        style={{ backgroundImage: `url(${circuit.imageUrl})` }}
-                                    />
+                                    <div className="absolute inset-0 transition-transform hover:scale-105 duration-500">
+                                        <Image
+                                            src={circuit.imageUrl}
+                                            alt={circuit.name}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
                                     <div className="absolute inset-0 bg-black/40 hover:bg-black/30 transition-colors" />
                                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                                         <div className="flex items-end justify-between">

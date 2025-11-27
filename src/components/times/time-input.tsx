@@ -53,13 +53,14 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
                         label="Sec"
                     />
                     <span className="pb-8 opacity-50">.</span>
-                    <NumberPicker
-                        value={milliseconds}
-                        onChange={setMilliseconds}
-                        max={999}
-                        label="Ms"
-                        digits={3}
-                    />
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="flex gap-1 h-32 items-center bg-muted/30 rounded-xl px-2 border-b-4 border-transparent focus-within:border-primary transition-colors">
+                            <ScrollDigit value={Math.floor(milliseconds / 100)} onChange={(v) => setMilliseconds((milliseconds % 100) + v * 100)} />
+                            <ScrollDigit value={Math.floor((milliseconds % 100) / 10)} onChange={(v) => setMilliseconds(Math.floor(milliseconds / 100) * 100 + v * 10 + (milliseconds % 10))} />
+                            <ScrollDigit value={milliseconds % 10} onChange={(v) => setMilliseconds(Math.floor(milliseconds / 10) * 10 + v)} />
+                        </div>
+                        <span className="text-xs text-muted-foreground font-sans uppercase tracking-wider font-medium">Ms</span>
+                    </div>
                 </div>
 
                 {/* Car Selection */}
@@ -80,6 +81,25 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
             >
                 <Save className="h-8 w-8" />
             </Button>
+        </div>
+    );
+}
+
+function ScrollDigit({ value, onChange }: { value: number, onChange: (v: number) => void }) {
+    return (
+        <div className="h-24 w-8 overflow-y-auto snap-y snap-mandatory scrollbar-hide relative flex flex-col items-center">
+            <div className="h-8 w-full shrink-0" /> {/* Spacer */}
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                <button
+                    key={num}
+                    className={`h-8 w-full shrink-0 flex items-center justify-center snap-center text-xl font-mono transition-colors ${num === value ? "text-primary font-bold scale-110" : "text-muted-foreground opacity-50"
+                        }`}
+                    onClick={() => onChange(num)}
+                >
+                    {num}
+                </button>
+            ))}
+            <div className="h-8 w-full shrink-0" /> {/* Spacer */}
         </div>
     );
 }

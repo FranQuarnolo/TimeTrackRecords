@@ -79,7 +79,7 @@ export function TimeList({ type }: TimeListProps) {
                                     return (
                                         <div
                                             key={lap.id}
-                                            className="flex items-center justify-between gap-4 p-3 rounded-lg bg-background border shadow-sm"
+                                            className="flex items-center justify-between gap-4 p-3 rounded-lg bg-background hover:bg-muted/50 transition-colors"
                                         >
                                             <div className="flex items-center gap-4">
                                                 <div className={cn(

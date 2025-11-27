@@ -42,7 +42,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between h-16 rounded-2xl border-2 border-input bg-background/50 px-6 text-xl font-normal hover:bg-background/80"
+                    className="w-full justify-between h-16 rounded-2xl border-2 border-border bg-background/50 px-6 text-xl font-normal hover:bg-background/80"
                 >
                     {value ? (
                         <div className="flex items-center gap-3">

@@ -1,4 +1,5 @@
 import { Car } from "lucide-react";
+import Image from "next/image";
 
 export const getBrandIcon = (brand?: string) => {
     if (!brand) return <Car className="h-5 w-5" />;
@@ -22,11 +23,12 @@ export const getBrandIcon = (brand?: string) => {
 
     if (logoPath) {
         return (
-            <div className="h-8 w-8 flex items-center justify-center">
-                <img
+            <div className="relative h-8 w-8 flex items-center justify-center">
+                <Image
                     src={logoPath}
                     alt={`${brand} logo`}
-                    className="max-h-full max-w-full object-contain"
+                    fill
+                    className="object-contain"
                 />
             </div>
         );
