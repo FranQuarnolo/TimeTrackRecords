@@ -1,3 +1,4 @@
+"use client"
 import { useStore } from "@/lib/store";
 import { formatTime, cn } from "@/lib/utils";
 import { SessionType } from "@/types";
