@@ -9,7 +9,7 @@ import { BackgroundAnimation } from "@/components/ui/background-animation";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col relative overflow-hidden bg-black text-white selection:bg-red-500/30">
+    <div className="flex min-h-screen flex-col relative overflow-hidden bg-black text-white selection:bg-primary/30">
       <BackgroundAnimation />
 
       <div className="relative z-10 flex flex-col min-h-screen">
@@ -26,31 +26,31 @@ export default function Home() {
           >
             <div className="relative group">
               {/* Glow Effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
 
               <Button
                 asChild
-                className="relative w-full h-32 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-black/60 hover:border-red-500/50 transition-all duration-300 overflow-hidden group"
+                className="relative w-full h-32 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 overflow-hidden group"
               >
                 <Link href="/mis-tiempos" className="flex items-center justify-between px-8">
                   <div className="flex flex-col items-start gap-2">
-                    <span className="text-xs font-mono text-red-500 tracking-widest uppercase">Telemetry System</span>
-                    <span className="text-3xl font-bold italic tracking-tighter text-white group-hover:text-red-50 transition-colors">
+                    <span className="text-xs font-mono text-primary tracking-widest uppercase">Sistema de Telemetría</span>
+                    <span className="text-3xl font-bold italic tracking-tighter text-white group-hover:text-primary-foreground transition-colors">
                       MIS TIEMPOS
                     </span>
                     <div className="flex items-center gap-2 text-zinc-400 text-sm">
                       <Timer className="h-4 w-4" />
-                      <span>View Records</span>
+                      <span>Ver mis tiempos</span>
                     </div>
                   </div>
-                  <ChevronRight className="h-8 w-8 text-zinc-500 group-hover:text-red-500 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="h-8 w-8 text-zinc-500 group-hover:text-primary group-hover:translate-x-1 transition-all" />
 
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 p-2 opacity-50">
-                    <div className="w-16 h-1 bg-gradient-to-l from-red-600 to-transparent" />
+                    <div className="w-16 h-1 bg-gradient-to-l from-primary to-transparent" />
                   </div>
                   <div className="absolute bottom-0 left-0 p-2 opacity-50">
-                    <div className="w-16 h-1 bg-gradient-to-r from-red-600 to-transparent" />
+                    <div className="w-16 h-1 bg-gradient-to-r from-primary to-transparent" />
                   </div>
                 </Link>
               </Button>
@@ -67,7 +67,7 @@ export default function Home() {
             <Button
               asChild
               size="icon"
-              className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 border-2 border-red-400/20 hover:scale-110 transition-transform duration-300"
+              className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 border-2 border-primary/20 hover:scale-110 transition-transform duration-300"
             >
               <Link href="/cargar-tiempo">
                 <PlusCircle className="h-8 w-8" />

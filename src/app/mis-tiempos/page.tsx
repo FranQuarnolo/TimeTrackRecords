@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function MisTiemposPage() {
     return (
-        <div className="flex min-h-screen flex-col relative overflow-hidden bg-black text-white selection:bg-red-500/30">
+        <div className="flex min-h-screen flex-col relative overflow-hidden bg-black text-white selection:bg-primary/30">
             <BackgroundAnimation />
 
             <div className="relative z-10 flex flex-col min-h-screen">
@@ -24,7 +24,7 @@ export default function MisTiemposPage() {
                         className="space-y-6"
                     >
                         <div className="flex items-center gap-4">
-                            <Button asChild variant="ghost" size="icon" className="text-white hover:text-red-500 hover:bg-white/10">
+                            <Button asChild variant="ghost" size="icon" className="text-white hover:text-primary hover:bg-white/10">
                                 <Link href="/">
                                     <ChevronLeft className="h-6 w-6" />
                                 </Link>
@@ -36,13 +36,13 @@ export default function MisTiemposPage() {
                             <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 p-1 rounded-xl border border-white/10">
                                 <TabsTrigger
                                     value="qualifying"
-                                    className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-white/60 rounded-lg transition-all"
+                                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-white/60 rounded-lg transition-all"
                                 >
                                     Clasificación
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="race"
-                                    className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-white/60 rounded-lg transition-all"
+                                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-white/60 rounded-lg transition-all"
                                 >
                                     Carrera
                                 </TabsTrigger>

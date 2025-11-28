@@ -28,7 +28,7 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
     return (
         <div className="flex flex-col h-full relative">
             <div className="flex items-center p-4 z-10 bg-transparent">
-                <Button variant="ghost" size="icon" onClick={onBack} className="-ml-2 text-white hover:text-red-500 hover:bg-white/10">
+                <Button variant="ghost" size="icon" onClick={onBack} className="-ml-2 text-white hover:text-primary hover:bg-white/10">
                     <ChevronLeft className="h-6 w-6" />
                 </Button>
                 <div className="ml-2">
@@ -46,14 +46,14 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
                         max={59}
                         label="Min"
                     />
-                    <span className="pb-8 opacity-50 text-red-500 animate-pulse">:</span>
+                    <span className="pb-8 opacity-50 text-primary animate-pulse">:</span>
                     <NumberPicker
                         value={seconds}
                         onChange={setSeconds}
                         max={59}
                         label="Sec"
                     />
-                    <span className="pb-8 opacity-50 text-red-500 animate-pulse">.</span>
+                    <span className="pb-8 opacity-50 text-primary animate-pulse">.</span>
                     <div className="flex flex-col items-center gap-2">
                         <div className="flex gap-1 h-32 items-center bg-black/40 rounded-xl px-2 border border-white/10 shadow-inner">
                             <ScrollDigit value={Math.floor(milliseconds / 100)} onChange={(v) => setMilliseconds((milliseconds % 100) + v * 100)} />
@@ -83,7 +83,7 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
             >
                 <Button
                     size="icon"
-                    className="h-16 w-16 rounded-full shadow-lg bg-red-600 hover:bg-red-700 text-white border-2 border-red-400/20 hover:scale-110 transition-transform"
+                    className="h-16 w-16 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary/20 hover:scale-110 transition-transform"
                     onClick={handleSubmit}
                 >
                     <Save className="h-8 w-8" />

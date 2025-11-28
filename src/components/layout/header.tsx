@@ -15,12 +15,12 @@ export function Header() {
             <div className="container flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-2">
                     {!isHome && (
-                        <Button variant="ghost" size="icon" onClick={() => router.back()} className="-ml-2 text-white hover:text-red-500 hover:bg-white/10">
+                        <Button variant="ghost" size="icon" onClick={() => router.back()} className="-ml-2 text-white hover:text-primary hover:bg-white/10">
                             <ChevronLeft className="h-6 w-6" />
                         </Button>
                     )}
                     <div className="flex items-center gap-2 font-bold text-lg">
-                        <div className="bg-red-600 p-1.5 rounded-lg shadow-[0_0_10px_rgba(220,38,38,0.5)]">
+                        <div className="bg-primary p-1.5 rounded-lg shadow-[0_0_10px_var(--primary)]">
                             <Timer className="h-5 w-5 text-white" />
                         </div>
                         <span className="text-white uppercase tracking-widest text-sm sm:text-base font-black italic">TimeTracks</span>

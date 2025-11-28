@@ -67,14 +67,7 @@ html[data-team="mercedes"] {
   --accent-secondary: #c0c0c0;
 }
 
-/* Red Bull: Blue + Red/Yellow */
-html[data-team="redbull"] {
-  --primary: #0600ef;
-  --primary-foreground: #ffffff;
-  --ring: #0600ef;
-  --border: #0600ef;
-  --accent-secondary: #cc1e4a;
-}
+
 
 /* McLaren: Orange + Blue */
 html[data-team="mclaren"] {
@@ -94,14 +87,7 @@ html[data-team="astonmartin"] {
   --accent-secondary: #cedc00;
 }
 
-/* Haas: White + Red */
-html[data-team="haas"] {
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --ring: #ffffff;
-  --border: #ffffff;
-  --accent-secondary: #e6002b;
-}
+
 
 /* Porsche: Red + Black/Gold */
 html[data-team="porsche"] {

@@ -70,7 +70,7 @@ export function TimeList({ type }: TimeListProps) {
                                 </Button>
                                 <h3 className="text-lg font-bold text-white tracking-wide">{circuit.name}</h3>
                             </div>
-                            <div className="text-xs font-mono text-red-400 font-medium px-2 py-1 bg-red-500/10 rounded border border-red-500/20">
+                            <div className="text-xs font-mono text-primary font-medium px-2 py-1 bg-primary/10 rounded border border-primary/20">
                                 {laps.length} LAP{laps.length !== 1 && 'S'}
                             </div>
                         </div>

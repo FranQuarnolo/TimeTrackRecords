@@ -64,7 +64,7 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                             className={cn(
                                 "px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider transition-all border",
                                 selectedCategory === cat
-                                    ? "bg-red-600 text-white border-red-600 shadow-[0_0_15px_-3px_rgba(220,38,38,0.5)]"
+                                    ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_-3px_var(--primary)]"
                                     : "bg-black/40 text-white/60 border-white/10 hover:bg-white/10 hover:text-white"
                             )}
                         >
@@ -86,7 +86,7 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.2 }}
-                                className="relative h-48 w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-lg hover:shadow-red-900/20 hover:border-red-500/30 transition-all group"
+                                className="relative h-48 w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-lg hover:shadow-primary/20 hover:border-primary/30 transition-all group"
                             >
                                 {/* Clickable Area */}
                                 <div
@@ -112,7 +112,7 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                                                     <span className="text-xs font-mono text-white/80 uppercase tracking-wider bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm border border-white/10">
                                                         {circuit.country}
                                                     </span>
-                                                    <span className="px-2 py-0.5 rounded bg-red-600 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm">
+                                                    <span className="px-2 py-0.5 rounded bg-primary text-[10px] font-bold text-primary-foreground uppercase tracking-wider shadow-sm">
                                                         {circuit.category}
                                                     </span>
                                                 </div>
@@ -153,7 +153,7 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                 <DialogTrigger asChild>
                     <Button
                         size="icon"
-                        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 bg-red-600 hover:bg-red-700 text-white border-2 border-red-400/20 hover:scale-110 transition-transform"
+                        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary/20 hover:scale-110 transition-transform"
                     >
                         <Search className="h-6 w-6" />
                     </Button>
@@ -169,7 +169,7 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                             placeholder="Buscar por nombre o país..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full h-14 pl-12 pr-4 rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-lg text-white placeholder:text-white/30 focus-visible:outline-none focus-visible:border-red-500 focus-visible:ring-1 focus-visible:ring-red-500 transition-all"
+                            className="w-full h-14 pl-12 pr-4 rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-lg text-white placeholder:text-white/30 focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all"
                             autoFocus
                         />
                     </div>

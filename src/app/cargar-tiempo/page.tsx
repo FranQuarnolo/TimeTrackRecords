@@ -43,7 +43,7 @@ export default function CargarTiempoPage() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col relative overflow-hidden bg-black text-white selection:bg-red-500/30">
+        <div className="flex min-h-screen flex-col relative overflow-hidden bg-black text-white selection:bg-primary/30">
             <BackgroundAnimation />
 
             <div className="relative z-10 flex flex-col min-h-screen">

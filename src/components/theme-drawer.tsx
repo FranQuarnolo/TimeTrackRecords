@@ -19,10 +19,8 @@ const TEAMS: { id: TeamTheme; name: string; color: string }[] = [
     { id: 'default', name: 'Default', color: '#ffffff' },
     { id: 'ferrari', name: 'Ferrari', color: '#ff2800' },
     { id: 'mercedes', name: 'Mercedes', color: '#00d2be' },
-    { id: 'redbull', name: 'Red Bull', color: '#0600ef' },
     { id: 'mclaren', name: 'McLaren', color: '#ff8000' },
     { id: 'astonmartin', name: 'Aston Martin', color: '#006f62' },
-    { id: 'haas', name: 'Haas', color: '#ffffff' },
     { id: 'porsche', name: 'Porsche', color: '#d5001c' },
     { id: 'bmw', name: 'BMW', color: '#0066b1' },
     { id: 'cadillac', name: 'Cadillac', color: '#ffaf00' },
@@ -33,10 +31,12 @@ export function ThemeDrawer() {
     const teamTheme = useStore((state) => state.teamTheme)
     const setTeamTheme = useStore((state) => state.setTeamTheme)
 
+    console.log('ThemeDrawer render:', { theme, resolvedTheme, teamTheme })
+
     return (
         <Drawer>
             <DrawerTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:text-red-500 hover:bg-white/10">
+                <Button variant="ghost" size="icon" className="text-white hover:text-primary hover:bg-white/10">
                     <Settings className="h-6 w-6" />
                     <span className="sr-only">Settings</span>
                 </Button>
@@ -45,49 +45,23 @@ export function ThemeDrawer() {
                 <div className="mx-auto w-full max-w-sm">
                     <DrawerHeader>
                         <DrawerTitle className="text-2xl font-black italic uppercase tracking-tighter text-center">Configuración</DrawerTitle>
-                        <DrawerDescription className="text-center text-white/50">Personaliza tu experiencia.</DrawerDescription>
                     </DrawerHeader>
 
                     <div className="p-4 space-y-8">
-                        <div className="space-y-4">
-                            <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Tema</h3>
-                            <div className="flex gap-2">
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "flex-1 border-white/10 bg-white/5 hover:bg-white/10 text-white hover:text-white",
-                                        resolvedTheme === 'light' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
-                                    )}
-                                    onClick={() => setTheme('light')}
-                                >
-                                    <Sun className="mr-2 h-4 w-4" />
-                                    Claro
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "flex-1 border-white/10 bg-white/5 hover:bg-white/10 text-white hover:text-white",
-                                        resolvedTheme === 'dark' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
-                                    )}
-                                    onClick={() => setTheme('dark')}
-                                >
-                                    <Moon className="mr-2 h-4 w-4" />
-                                    Oscuro
-                                </Button>
-                            </div>
-                        </div>
-
                         <div className="space-y-4">
                             <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Escudería</h3>
                             <div className="grid grid-cols-4 gap-3">
                                 {TEAMS.map((team) => (
                                     <button
                                         key={team.id}
-                                        onClick={() => setTeamTheme(team.id)}
+                                        onClick={() => {
+                                            console.log('Setting team theme to:', team.id)
+                                            setTeamTheme(team.id)
+                                        }}
                                         className={cn(
                                             "flex flex-col items-center gap-2 p-2 rounded-xl border transition-all duration-200 group",
                                             teamTheme === team.id
-                                                ? "border-red-500 bg-red-500/10 shadow-[0_0_10px_rgba(220,38,38,0.2)]"
+                                                ? "border-primary bg-primary/10 shadow-[0_0_10px_var(--primary)]"
                                                 : "border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20"
                                         )}
                                     >

@@ -12,8 +12,10 @@ export function TeamThemeProvider({ children }: { children: React.ReactNode }) {
     }, [syncCircuits])
 
     useEffect(() => {
+        console.log('TeamTheme changed:', teamTheme)
         const root = window.document.documentElement
         root.setAttribute("data-team", teamTheme)
+        console.log('Attribute set to:', root.getAttribute('data-team'))
     }, [teamTheme])
 
     return <>{children}</>

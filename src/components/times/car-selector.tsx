@@ -42,7 +42,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between h-16 rounded-2xl border border-white/10 bg-black/40 px-6 text-xl font-normal hover:bg-black/60 hover:border-red-500/30 text-white transition-all shadow-inner"
+                    className="w-full justify-between h-16 rounded-2xl border border-white/10 bg-black/40 px-6 text-xl font-normal hover:bg-black/60 hover:border-primary/30 text-white transition-all shadow-inner"
                 >
                     {value ? (
                         <div className="flex items-center gap-3">
@@ -65,7 +65,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                     <div className="relative">
                         <Search className="absolute left-3 top-3 h-4 w-4 text-white/50" />
                         <input
-                            className="flex h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 pl-9 text-sm text-white placeholder:text-white/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+                            className="flex h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 pl-9 text-sm text-white placeholder:text-white/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all"
                             placeholder="Buscar auto..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -81,7 +81,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                                     variant="ghost"
                                     className={cn(
                                         "justify-start h-auto py-3 px-4 text-lg font-normal hover:bg-white/10 hover:text-white transition-all border border-transparent",
-                                        value === car.name && "bg-red-600/10 border-red-600/30 text-red-500 hover:bg-red-600/20 hover:text-red-400"
+                                        value === car.name && "bg-primary/10 border-primary/30 text-primary hover:bg-primary/20 hover:text-primary"
                                     )}
                                     onClick={() => {
                                         onSelect(car.name)
@@ -94,7 +94,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                                         </div>
                                         <span className="truncate flex-1 text-left font-mono uppercase tracking-wide">{car.name}</span>
                                         {value === car.name && (
-                                            <Check className="h-4 w-4 text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
+                                            <Check className="h-4 w-4 text-primary drop-shadow-[0_0_5px_var(--primary)]" />
                                         )}
                                     </div>
                                 </Button>

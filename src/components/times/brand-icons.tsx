@@ -41,11 +41,11 @@ export const getBrandIcon = (brand?: string) => {
             case 'mclaren': return 'bg-orange-500 text-black';
             case 'alpine': return 'bg-blue-600 text-white';
             case 'williams': return 'bg-blue-900 text-white';
-            case 'haas': return 'bg-white text-red-600 border border-red-600';
+            case 'haas': return 'bg-white text-primary border border-primary';
             case 'sauber': return 'bg-green-500 text-black';
             case 'lexus': return 'bg-black text-white';
             case 'corvette': return 'bg-yellow-500 text-black';
-            case 'dodge': return 'bg-red-700 text-white';
+            case 'dodge': return 'bg-primary text-primary-foreground';
             case 'torino': return 'bg-gray-600 text-white';
             case 'isottafraschini': return 'bg-blue-800 text-white';
             default: return 'bg-zinc-500 text-white';
