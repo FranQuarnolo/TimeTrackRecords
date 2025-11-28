@@ -12,6 +12,7 @@ interface AppState {
     toggleFavorite: (circuitId: string) => void;
     setTeamTheme: (theme: TeamTheme) => void;
     syncCircuits: () => void;
+    addCar: (name: string) => void;
 }
 
 // Initial circuits data
@@ -61,6 +62,7 @@ const INITIAL_CARS: Car[] = [
     { id: 'peugeot_9x8', name: 'Peugeot 9X8', category: 'WEC', brand: 'Peugeot' },
     { id: 'bmw_m_hybrid', name: 'BMW M Hybrid V8', category: 'WEC', brand: 'BMW' },
     { id: 'lamborghini_sc63', name: 'Lamborghini SC63', category: 'WEC', brand: 'Lamborghini' },
+    { id: 'alpine_a424', name: 'Alpine A424', category: 'WEC', brand: 'Alpine' },
     { id: 'isotta_tipo6', name: 'Isotta Fraschini Tipo 6', category: 'WEC', brand: 'Isotta Fraschini' },
     // LMGT3
     { id: 'aston_martin_vantage', name: 'Aston Martin Vantage GT3', category: 'GT3', brand: 'Aston Martin' },
@@ -71,6 +73,20 @@ const INITIAL_CARS: Car[] = [
     { id: 'ford_mustang_gt3', name: 'Ford Mustang GT3', category: 'GT3', brand: 'Ford' },
     { id: 'lexus_rc_f_gt3', name: 'Lexus RC F GT3', category: 'GT3', brand: 'Lexus' },
     { id: 'corvette_z06_gt3r', name: 'Corvette Z06 GT3.R', category: 'GT3', brand: 'Corvette' },
+    { id: 'porsche_911_gt3_r', name: 'Porsche 911 GT3 R (992)', category: 'GT3', brand: 'Porsche' },
+    { id: 'mercedes_amg_gt3', name: 'Mercedes-AMG GT3 Evo', category: 'GT3', brand: 'Mercedes' },
+    { id: 'audi_r8_lms', name: 'Audi R8 LMS GT3 evo II', category: 'GT3', brand: 'Audi' },
+    // F1 2024
+    { id: 'rb20', name: 'Red Bull RB20', category: 'F1', brand: 'Red Bull' },
+    { id: 'sf24', name: 'Ferrari SF-24', category: 'F1', brand: 'Ferrari' },
+    { id: 'w15', name: 'Mercedes W15', category: 'F1', brand: 'Mercedes' },
+    { id: 'mcl38', name: 'McLaren MCL38', category: 'F1', brand: 'McLaren' },
+    { id: 'amr24', name: 'Aston Martin AMR24', category: 'F1', brand: 'Aston Martin' },
+    { id: 'a524', name: 'Alpine A524', category: 'F1', brand: 'Alpine' },
+    { id: 'fw46', name: 'Williams FW46', category: 'F1', brand: 'Williams' },
+    { id: 'vcarb01', name: 'VCARB 01', category: 'F1', brand: 'RB' },
+    { id: 'c44', name: 'Kick Sauber C44', category: 'F1', brand: 'Kick Sauber' },
+    { id: 'vf24', name: 'Haas VF-24', category: 'F1', brand: 'Haas' },
     // TC Argentina 2025
     { id: 'chevrolet_camaro_zl1', name: 'Chevrolet Camaro ZL1', category: 'TC', brand: 'Chevrolet' },
     { id: 'ford_mustang_mach_1', name: 'Ford Mustang Mach I', category: 'TC', brand: 'Ford' },
@@ -132,6 +148,15 @@ export const useStore = create<AppState>()(
                 }));
 
                 return { circuits: mergedCircuits };
+            }),
+            addCar: (name) => set((state) => {
+                const newCar: Car = {
+                    id: name.toLowerCase().replace(/\s+/g, '_'),
+                    name: name,
+                    category: 'Other',
+                    brand: 'Custom'
+                };
+                return { cars: [...state.cars, newCar] };
             }),
         }),
         {

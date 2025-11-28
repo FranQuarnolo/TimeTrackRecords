@@ -23,7 +23,7 @@ export const getBrandIcon = (brand?: string) => {
 
     if (logoPath) {
         return (
-            <div className="relative h-8 w-8 flex items-center justify-center">
+            <div className="relative h-8 w-8 flex items-center justify-center filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
                 <Image
                     src={logoPath}
                     alt={`${brand} logo`}
@@ -37,24 +37,28 @@ export const getBrandIcon = (brand?: string) => {
     // Fallback for brands without logos
     const getBrandColor = (b: string) => {
         switch (b) {
-            case 'redbull': return 'bg-blue-900 text-yellow-400';
-            case 'mclaren': return 'bg-orange-500 text-black';
-            case 'alpine': return 'bg-blue-600 text-white';
-            case 'williams': return 'bg-blue-900 text-white';
-            case 'haas': return 'bg-white text-primary border border-primary';
-            case 'sauber': return 'bg-green-500 text-black';
-            case 'lexus': return 'bg-black text-white';
-            case 'corvette': return 'bg-yellow-500 text-black';
-            case 'dodge': return 'bg-primary text-primary-foreground';
-            case 'torino': return 'bg-gray-600 text-white';
-            case 'isottafraschini': return 'bg-blue-800 text-white';
-            default: return 'bg-zinc-500 text-white';
+            case 'redbull': return 'bg-[#121F45] text-[#FFCC00] border border-[#FFCC00]';
+            case 'mclaren': return 'bg-[#FF8000] text-black border border-black';
+            case 'alpine': return 'bg-[#0090FF] text-white border border-[#FD4BC7]';
+            case 'williams': return 'bg-[#00A0DE] text-black border border-white';
+            case 'haas': return 'bg-white text-[#E6002B] border border-[#E6002B]';
+            case 'sauber': return 'bg-[#52E252] text-black border border-black';
+            case 'kicksauber': return 'bg-[#52E252] text-black border border-black';
+            case 'rb': return 'bg-[#1634CC] text-white border border-[#FF3555]';
+            case 'lexus': return 'bg-black text-white border border-white';
+            case 'corvette': return 'bg-[#C6C8CA] text-[#D8AC3F] border border-black';
+            case 'dodge': return 'bg-[#B91C1C] text-white border border-black';
+            case 'torino': return 'bg-gray-600 text-white border border-white';
+            case 'isottafraschini': return 'bg-[#002D72] text-white border border-[#C60C30]';
+            case 'audi': return 'bg-white text-black border border-black';
+            case 'custom': return 'bg-white/10 text-white border border-white/30';
+            default: return 'bg-zinc-800 text-white border border-white/10';
         }
     };
 
     return (
-        <div className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold uppercase ${getBrandColor(normalizedBrand)}`}>
-            {brand.substring(0, 1)}
+        <div className={`h-8 w-8 rounded-full flex items-center justify-center text-[10px] font-black uppercase shadow-lg ${getBrandColor(normalizedBrand)}`}>
+            {brand.substring(0, 2)}
         </div>
     );
 };
