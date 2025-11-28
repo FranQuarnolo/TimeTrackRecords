@@ -85,7 +85,7 @@ export function ThemeDrawer() {
                     </div>
 
                     <div className="p-4 mt-4 border-t border-white/10 text-center text-xs text-white/30 font-mono">
-                        TimeTracksRecords v1.1.0
+                        TimeTracksRecords v1.2
                     </div>
                 </div>
             </DrawerContent>

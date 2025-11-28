@@ -11,7 +11,7 @@
     1.  **Seleccionar Circuito**: Lista visual con **Buscador Flotante (FAB)** y filtros mejorados (incluyendo "Favoritos").
     2.  **Seleccionar Sesión**: Elige entre Clasificación o Carrera.
     3.  **Ingresar Tiempo**: Selector preciso con milisegundos (3 dígitos) y selección de auto (WEC, F1, etc.).
--   **🎨 Temas de Escuderías**: Personaliza la app con los colores de tu equipo favorito (Ferrari, Mercedes, Red Bull, etc.) además del modo Claro/Oscuro.
+-   **🎨 Temas de Escuderías**: Personaliza la app con los colores de tu equipo favorito (Ferrari, Mercedes, McLaren, etc.). ¡Toda la interfaz se adapta al color de tu equipo!
 -   **📱 Mobile First**: Optimizada para interacciones táctiles y pantallas de móviles.
 -   **💾 Guardado Local**: Todos los datos se guardan localmente en tu dispositivo.
 
