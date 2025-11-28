@@ -2,9 +2,10 @@
 import { useStore } from "@/lib/store";
 import { formatTime, cn } from "@/lib/utils";
 import { SessionType } from "@/types";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TimeListProps {
     type: SessionType;
@@ -40,8 +41,9 @@ export function TimeList({ type }: TimeListProps) {
 
     if (lapsByCircuit.length === 0) {
         return (
-            <div className="text-center text-muted-foreground py-8">
-                No hay tiempos registrados para {type === 'qualifying' ? 'clasificación' : 'carrera'}.
+            <div className="text-center text-white/60 py-12 flex flex-col items-center gap-4">
+                <Trophy className="h-12 w-12 opacity-20" />
+                <p>No hay tiempos registrados para {type === 'qualifying' ? 'clasificación' : 'carrera'}.</p>
             </div>
         );
     }
@@ -52,60 +54,88 @@ export function TimeList({ type }: TimeListProps) {
                 const isExpanded = expandedCircuits[circuit.id] ?? true; // Default to expanded
 
                 return (
-                    <div key={circuit.id} className="border rounded-xl overflow-hidden bg-card shadow-sm">
+                    <motion.div
+                        key={circuit.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="border border-white/10 rounded-xl overflow-hidden bg-black/40 backdrop-blur-md shadow-lg"
+                    >
                         <div
-                            className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                            className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
                             onClick={() => toggleCircuit(circuit.id)}
                         >
                             <div className="flex items-center gap-3">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-white/70 hover:text-white hover:bg-white/10">
                                     {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                                 </Button>
-                                <h3 className="text-lg font-bold">{circuit.name}</h3>
+                                <h3 className="text-lg font-bold text-white tracking-wide">{circuit.name}</h3>
                             </div>
-                            <div className="text-sm text-muted-foreground font-medium">
-                                {laps.length} {laps.length === 1 ? 'tiempo' : 'tiempos'}
+                            <div className="text-xs font-mono text-red-400 font-medium px-2 py-1 bg-red-500/10 rounded border border-red-500/20">
+                                {laps.length} LAP{laps.length !== 1 && 'S'}
                             </div>
                         </div>
 
-                        {isExpanded && (
-                            <div className="border-t bg-muted/10 p-2 space-y-2">
-                                {laps.map((lap, index) => {
-                                    let medalColor = "bg-muted text-muted-foreground";
-                                    if (index === 0) medalColor = "bg-yellow-400 text-yellow-900 ring-2 ring-yellow-400/50";
-                                    if (index === 1) medalColor = "bg-slate-300 text-slate-900 ring-2 ring-slate-300/50";
-                                    if (index === 2) medalColor = "bg-amber-600 text-amber-100 ring-2 ring-amber-600/50";
+                        <AnimatePresence>
+                            {isExpanded && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="border-t border-white/5 bg-black/20"
+                                >
+                                    <div className="p-2 space-y-2">
+                                        {laps.map((lap, index) => {
+                                            let rankStyle = "text-white/50 font-mono text-sm";
+                                            let rowStyle = "bg-white/5 border-transparent";
 
-                                    return (
-                                        <div
-                                            key={lap.id}
-                                            className="flex items-center justify-between gap-4 p-3 rounded-lg bg-background hover:bg-muted/50 transition-colors"
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <div className={cn(
-                                                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-bold text-sm shadow-sm",
-                                                    medalColor
-                                                )}>
-                                                    {index + 1}
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-xl font-mono font-bold tracking-tight">
-                                                        {formatTime(lap.time)}
+                                            if (index === 0) {
+                                                rankStyle = "text-yellow-400 font-bold text-lg drop-shadow-sm";
+                                                rowStyle = "bg-yellow-500/10 border-yellow-500/20 shadow-[0_0_15px_-5px_rgba(234,179,8,0.3)]";
+                                            } else if (index === 1) {
+                                                rankStyle = "text-slate-300 font-bold text-lg";
+                                                rowStyle = "bg-slate-500/10 border-slate-500/20";
+                                            } else if (index === 2) {
+                                                rankStyle = "text-amber-600 font-bold text-lg";
+                                                rowStyle = "bg-amber-600/10 border-amber-600/20";
+                                            }
+
+                                            return (
+                                                <div
+                                                    key={lap.id}
+                                                    className={cn(
+                                                        "flex items-center justify-between gap-4 p-3 rounded-lg border transition-all hover:scale-[1.01] hover:bg-white/10",
+                                                        rowStyle
+                                                    )}
+                                                >
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-8 flex justify-center">
+                                                            <span className={rankStyle}>
+                                                                {index + 1}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className={cn(
+                                                                "text-xl font-mono font-bold tracking-tight",
+                                                                index === 0 ? "text-white" : "text-white/90"
+                                                            )}>
+                                                                {formatTime(lap.time)}
+                                                            </span>
+                                                            <span className="text-xs text-white/50 font-medium uppercase tracking-wider">
+                                                                {lap.carModel || 'Unknown Car'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-[10px] text-white/30 font-mono">
+                                                        {new Date(lap.date).toLocaleDateString()}
                                                     </span>
-                                                    <span className="text-xs text-muted-foreground font-medium">
-                                                        {lap.carModel || 'Sin modelo'}
-                                                    </span>
                                                 </div>
-                                            </div>
-                                            <span className="text-[10px] text-muted-foreground font-medium bg-muted px-2 py-1 rounded-full">
-                                                {new Date(lap.date).toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-                    </div>
+                                            );
+                                        })}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
                 );
             })}
         </div>

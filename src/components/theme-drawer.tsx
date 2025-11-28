@@ -35,33 +35,39 @@ export function ThemeDrawer() {
     return (
         <Drawer>
             <DrawerTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="text-white hover:text-red-500 hover:bg-white/10">
                     <Settings className="h-6 w-6" />
                     <span className="sr-only">Settings</span>
                 </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent className="bg-black/95 border-t border-white/10 text-white">
                 <div className="mx-auto w-full max-w-sm">
                     <DrawerHeader>
-                        <DrawerTitle>Configuración</DrawerTitle>
-                        <DrawerDescription>Personaliza tu experiencia.</DrawerDescription>
+                        <DrawerTitle className="text-2xl font-black italic uppercase tracking-tighter text-center">Configuración</DrawerTitle>
+                        <DrawerDescription className="text-center text-white/50">Personaliza tu experiencia.</DrawerDescription>
                     </DrawerHeader>
 
-                    <div className="p-4 space-y-6">
-                        <div className="space-y-3">
-                            <h3 className="text-sm font-medium">Tema</h3>
+                    <div className="p-4 space-y-8">
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Tema</h3>
                             <div className="flex gap-2">
                                 <Button
-                                    variant={theme === 'light' ? 'default' : 'outline'}
-                                    className="flex-1"
+                                    variant="outline"
+                                    className={cn(
+                                        "flex-1 border-white/10 bg-white/5 hover:bg-white/10 text-white hover:text-white",
+                                        theme === 'light' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
+                                    )}
                                     onClick={() => setTheme('light')}
                                 >
                                     <Sun className="mr-2 h-4 w-4" />
                                     Claro
                                 </Button>
                                 <Button
-                                    variant={theme === 'dark' ? 'default' : 'outline'}
-                                    className="flex-1"
+                                    variant="outline"
+                                    className={cn(
+                                        "flex-1 border-white/10 bg-white/5 hover:bg-white/10 text-white hover:text-white",
+                                        theme === 'dark' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
+                                    )}
                                     onClick={() => setTheme('dark')}
                                 >
                                     <Moon className="mr-2 h-4 w-4" />
@@ -70,25 +76,31 @@ export function ThemeDrawer() {
                             </div>
                         </div>
 
-                        <div className="space-y-3">
-                            <h3 className="text-sm font-medium">Escudería</h3>
-                            <div className="grid grid-cols-4 gap-2">
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Escudería</h3>
+                            <div className="grid grid-cols-4 gap-3">
                                 {TEAMS.map((team) => (
                                     <button
                                         key={team.id}
                                         onClick={() => setTeamTheme(team.id)}
                                         className={cn(
-                                            "flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200",
+                                            "flex flex-col items-center gap-2 p-2 rounded-xl border transition-all duration-200 group",
                                             teamTheme === team.id
-                                                ? "border-primary bg-primary/10 scale-105 shadow-sm ring-2 ring-primary ring-offset-2 ring-offset-background"
-                                                : "border-transparent hover:bg-muted hover:scale-105"
+                                                ? "border-red-500 bg-red-500/10 shadow-[0_0_10px_rgba(220,38,38,0.2)]"
+                                                : "border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20"
                                         )}
                                     >
                                         <div
-                                            className="h-10 w-10 rounded-full border shadow-sm"
+                                            className={cn(
+                                                "h-8 w-8 rounded-full shadow-sm transition-transform duration-300",
+                                                teamTheme === team.id ? "scale-110" : "group-hover:scale-110"
+                                            )}
                                             style={{ backgroundColor: team.color }}
                                         />
-                                        <span className="text-xs font-medium truncate w-full text-center">
+                                        <span className={cn(
+                                            "text-[10px] font-mono uppercase tracking-wider truncate w-full text-center transition-colors",
+                                            teamTheme === team.id ? "text-white font-bold" : "text-white/50 group-hover:text-white/80"
+                                        )}>
                                             {team.name}
                                         </span>
                                     </button>
@@ -97,7 +109,7 @@ export function ThemeDrawer() {
                         </div>
                     </div>
 
-                    <div className="p-4 mt-4 border-t text-center text-xs text-muted-foreground">
+                    <div className="p-4 mt-4 border-t border-white/10 text-center text-xs text-white/30 font-mono">
                         TimeTracksRecords v1.1.0
                     </div>
                 </div>

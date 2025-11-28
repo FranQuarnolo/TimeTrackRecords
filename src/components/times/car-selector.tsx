@@ -42,28 +42,30 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between h-16 rounded-2xl border-2 border-border bg-background/50 px-6 text-xl font-normal hover:bg-background/80"
+                    className="w-full justify-between h-16 rounded-2xl border border-white/10 bg-black/40 px-6 text-xl font-normal hover:bg-black/60 hover:border-red-500/30 text-white transition-all shadow-inner"
                 >
                     {value ? (
                         <div className="flex items-center gap-3">
-                            {getBrandIcon(selectedCar?.brand)}
-                            <span className="truncate">{value}</span>
+                            <div className="filter drop-shadow-[0_0_2px_rgba(255,255,255,0.5)]">
+                                {getBrandIcon(selectedCar?.brand)}
+                            </div>
+                            <span className="truncate font-mono uppercase tracking-wide">{value}</span>
                         </div>
                     ) : (
-                        <span className="text-muted-foreground/50">Ej: Ferrari 499P</span>
+                        <span className="text-white/30 italic">Ej: Ferrari 499P</span>
                     )}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-white" />
                 </Button>
             </DrawerTrigger>
-            <DrawerContent className="h-[85vh]">
-                <DrawerHeader className="border-b pb-4">
-                    <DrawerTitle className="text-center">Seleccionar Vehículo</DrawerTitle>
+            <DrawerContent className="h-[85vh] bg-black/95 border-t border-white/10 text-white">
+                <DrawerHeader className="border-b border-white/10 pb-4">
+                    <DrawerTitle className="text-center text-2xl font-black italic uppercase tracking-tighter">Seleccionar Vehículo</DrawerTitle>
                 </DrawerHeader>
-                <div className="p-4 border-b">
+                <div className="p-4 border-b border-white/10">
                     <div className="relative">
-                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Search className="absolute left-3 top-3 h-4 w-4 text-white/50" />
                         <input
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-9 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 pl-9 text-sm text-white placeholder:text-white/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
                             placeholder="Buscar auto..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -78,8 +80,8 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                                 <Button
                                     variant="ghost"
                                     className={cn(
-                                        "justify-start h-auto py-3 px-4 text-lg font-normal",
-                                        value === car.name && "bg-accent"
+                                        "justify-start h-auto py-3 px-4 text-lg font-normal hover:bg-white/10 hover:text-white transition-all border border-transparent",
+                                        value === car.name && "bg-red-600/10 border-red-600/30 text-red-500 hover:bg-red-600/20 hover:text-red-400"
                                     )}
                                     onClick={() => {
                                         onSelect(car.name)
@@ -87,17 +89,19 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                                     }}
                                 >
                                     <div className="flex items-center gap-3 w-full">
-                                        {getBrandIcon(car.brand)}
-                                        <span className="truncate flex-1 text-left">{car.name}</span>
+                                        <div className="opacity-80">
+                                            {getBrandIcon(car.brand)}
+                                        </div>
+                                        <span className="truncate flex-1 text-left font-mono uppercase tracking-wide">{car.name}</span>
                                         {value === car.name && (
-                                            <Check className="h-4 w-4 text-primary" />
+                                            <Check className="h-4 w-4 text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
                                         )}
                                     </div>
                                 </Button>
                             </DrawerClose>
                         ))}
                         {filteredCars.length === 0 && (
-                            <div className="text-center py-8 text-muted-foreground">
+                            <div className="text-center py-8 text-white/30">
                                 No se encontraron autos
                             </div>
                         )}
