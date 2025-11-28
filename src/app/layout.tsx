@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TimeTracksRecords",
+  title: "Telemetry System",
   description: "Track your lap times",
 };
 
