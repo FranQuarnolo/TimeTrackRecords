@@ -50,7 +50,7 @@
 
 /* Team Themes */
 /* Ferrari: Red + Yellow */
-[data-team="ferrari"] {
+html[data-team="ferrari"] {
   --primary: #ff2800;
   --primary-foreground: #ffffff;
   --ring: #ff2800;
@@ -59,7 +59,7 @@
 }
 
 /* Mercedes: Teal + Silver */
-[data-team="mercedes"] {
+html[data-team="mercedes"] {
   --primary: #00d2be;
   --primary-foreground: #000000;
   --ring: #00d2be;
@@ -68,7 +68,7 @@
 }
 
 /* Red Bull: Blue + Red/Yellow */
-[data-team="redbull"] {
+html[data-team="redbull"] {
   --primary: #0600ef;
   --primary-foreground: #ffffff;
   --ring: #0600ef;
@@ -77,7 +77,7 @@
 }
 
 /* McLaren: Orange + Blue */
-[data-team="mclaren"] {
+html[data-team="mclaren"] {
   --primary: #ff8000;
   --primary-foreground: #000000;
   --ring: #ff8000;
@@ -86,7 +86,7 @@
 }
 
 /* Aston Martin: Green + Lime */
-[data-team="astonmartin"] {
+html[data-team="astonmartin"] {
   --primary: #006f62;
   --primary-foreground: #ffffff;
   --ring: #006f62;
@@ -95,7 +95,7 @@
 }
 
 /* Haas: White + Red */
-[data-team="haas"] {
+html[data-team="haas"] {
   --primary: #ffffff;
   --primary-foreground: #000000;
   --ring: #ffffff;
@@ -104,7 +104,7 @@
 }
 
 /* Porsche: Red + Black/Gold */
-[data-team="porsche"] {
+html[data-team="porsche"] {
   --primary: #d5001c;
   --primary-foreground: #ffffff;
   --ring: #d5001c;
@@ -113,7 +113,7 @@
 }
 
 /* BMW: Blue + Red/Violet */
-[data-team="bmw"] {
+html[data-team="bmw"] {
   --primary: #0066b1;
   --primary-foreground: #ffffff;
   --ring: #0066b1;
@@ -122,7 +122,7 @@
 }
 
 /* Cadillac: Gold + Red/Blue */
-[data-team="cadillac"] {
+html[data-team="cadillac"] {
   --primary: #ffaf00;
   --primary-foreground: #000000;
   --ring: #ffaf00;

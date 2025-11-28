@@ -4,7 +4,8 @@ import { useStore } from "@/lib/store"
 import { useEffect } from "react"
 
 export function TeamThemeProvider({ children }: { children: React.ReactNode }) {
-    const { teamTheme, syncCircuits } = useStore()
+    const teamTheme = useStore((state) => state.teamTheme)
+    const syncCircuits = useStore((state) => state.syncCircuits)
 
     useEffect(() => {
         syncCircuits()

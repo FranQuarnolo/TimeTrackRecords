@@ -29,8 +29,9 @@ const TEAMS: { id: TeamTheme; name: string; color: string }[] = [
 ]
 
 export function ThemeDrawer() {
-    const { setTheme, theme } = useTheme()
-    const { teamTheme, setTeamTheme } = useStore()
+    const { setTheme, theme, resolvedTheme } = useTheme()
+    const teamTheme = useStore((state) => state.teamTheme)
+    const setTeamTheme = useStore((state) => state.setTeamTheme)
 
     return (
         <Drawer>
@@ -55,7 +56,7 @@ export function ThemeDrawer() {
                                     variant="outline"
                                     className={cn(
                                         "flex-1 border-white/10 bg-white/5 hover:bg-white/10 text-white hover:text-white",
-                                        theme === 'light' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
+                                        resolvedTheme === 'light' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
                                     )}
                                     onClick={() => setTheme('light')}
                                 >
@@ -66,7 +67,7 @@ export function ThemeDrawer() {
                                     variant="outline"
                                     className={cn(
                                         "flex-1 border-white/10 bg-white/5 hover:bg-white/10 text-white hover:text-white",
-                                        theme === 'dark' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
+                                        resolvedTheme === 'dark' && "border-red-500 bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400"
                                     )}
                                     onClick={() => setTheme('dark')}
                                 >
