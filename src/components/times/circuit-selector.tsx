@@ -99,6 +99,7 @@ export function CircuitSelector({ onSelect }: CircuitSelectorProps) {
                                             alt={circuit.name}
                                             fill
                                             className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                            unoptimized
                                         />
                                     </div>
                                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />

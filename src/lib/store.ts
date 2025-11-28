@@ -11,6 +11,7 @@ interface AppState {
     getBestTime: (circuitId: string, type: 'qualifying' | 'race') => number | null;
     toggleFavorite: (circuitId: string) => void;
     setTeamTheme: (theme: TeamTheme) => void;
+    syncCircuits: () => void;
 }
 
 // Initial circuits data
@@ -21,17 +22,17 @@ const INITIAL_CIRCUITS: Circuit[] = [
     { id: 'interlagos', name: 'Interlagos', imageUrl: '/tracks/interlagos.png', country: 'Brazil', category: 'F1', isFavorite: false },
     { id: 'suzuka', name: 'Suzuka', imageUrl: '/tracks/suzuka.png', country: 'Japan', category: 'F1', isFavorite: false },
     { id: 'nurburgring', name: 'Nürburgring', imageUrl: '/tracks/nurburgring.png', country: 'Germany', category: 'Other', isFavorite: false },
-    { id: 'monaco', name: 'Monaco', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Monaco', country: 'Monaco', category: 'F1', isFavorite: false },
+    { id: 'monaco', name: 'Monaco', imageUrl: '/tracks/monaco.png', country: 'Monaco', category: 'F1', isFavorite: false },
     { id: 'lemans', name: 'Le Mans', imageUrl: '/tracks/lemans.png', country: 'France', category: 'WEC', isFavorite: false },
-    { id: 'daytona', name: 'Daytona', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Daytona', country: 'USA', category: 'Other', isFavorite: false },
-    { id: 'sebring', name: 'Sebring', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Sebring', country: 'USA', category: 'WEC', isFavorite: false },
+    { id: 'daytona', name: 'Daytona', imageUrl: '/tracks/daytona.png', country: 'USA', category: 'Other', isFavorite: false },
+    { id: 'sebring', name: 'Sebring', imageUrl: '/tracks/sebring.png', country: 'USA', category: 'WEC', isFavorite: false },
     { id: 'fuji', name: 'Fuji', imageUrl: '/tracks/fuji.png', country: 'Japan', category: 'WEC', isFavorite: false },
-    { id: 'bahrain', name: 'Bahrain', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Bahrain', country: 'Bahrain', category: 'WEC', isFavorite: false },
+    { id: 'bahrain', name: 'Bahrain', imageUrl: '/tracks/bahrain.png', country: 'Bahrain', category: 'WEC', isFavorite: false },
     { id: 'cota', name: 'COTA', imageUrl: '/tracks/cota.png', country: 'USA', category: 'F1', isFavorite: false },
     { id: 'imola', name: 'Imola', imageUrl: '/tracks/imola.png', country: 'Italy', category: 'F1', isFavorite: false },
-    { id: 'termas', name: 'Termas de Río Hondo', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Termas', country: 'Argentina', category: 'Other', isFavorite: false },
-    { id: 'mendoza', name: 'San Martín (Mendoza)', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Mendoza', country: 'Argentina', category: 'Other', isFavorite: false },
-    { id: 'portimao', name: 'Portimão', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Portimao', country: 'Portugal', category: 'WEC', isFavorite: false },
+    { id: 'termas', name: 'Termas de Río Hondo', imageUrl: '/tracks/termas.png', country: 'Argentina', category: 'Other', isFavorite: false },
+    { id: 'mendoza', name: 'San Martín (Mendoza)', imageUrl: '/tracks/mendoza.png', country: 'Argentina', category: 'Other', isFavorite: false },
+    { id: 'portimao', name: 'Portimão', imageUrl: '/tracks/portimao.png', country: 'Portugal', category: 'WEC', isFavorite: false },
     { id: 'zandvoort', name: 'Zandvoort', imageUrl: '/tracks/zandvordt.png', country: 'Netherlands', category: 'F1', isFavorite: false },
     { id: 'catalunya', name: 'Catalunya', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Catalunya', country: 'Spain', category: 'F1', isFavorite: false },
     { id: 'mexico', name: 'Hermanos Rodríguez', imageUrl: 'https://placehold.co/600x400/1a1a1a/ffffff?text=Mexico', country: 'Mexico', category: 'F1', isFavorite: false },
@@ -120,6 +121,18 @@ export const useStore = create<AppState>()(
                 )
             })),
             setTeamTheme: (theme) => set({ teamTheme: theme }),
+            syncCircuits: () => set((state) => {
+                const currentFavorites = new Set(
+                    state.circuits.filter(c => c.isFavorite).map(c => c.id)
+                );
+
+                const mergedCircuits = INITIAL_CIRCUITS.map(initialCircuit => ({
+                    ...initialCircuit,
+                    isFavorite: currentFavorites.has(initialCircuit.id)
+                }));
+
+                return { circuits: mergedCircuits };
+            }),
         }),
         {
             name: 'timetracks-storage',

@@ -4,7 +4,11 @@ import { useStore } from "@/lib/store"
 import { useEffect } from "react"
 
 export function TeamThemeProvider({ children }: { children: React.ReactNode }) {
-    const { teamTheme } = useStore()
+    const { teamTheme, syncCircuits } = useStore()
+
+    useEffect(() => {
+        syncCircuits()
+    }, [syncCircuits])
 
     useEffect(() => {
         const root = window.document.documentElement
