@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
     session: Session | null;
@@ -23,6 +24,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const router = useRouter();
+    const pathname = usePathname();
+
     useEffect(() => {
         const setData = async () => {
             const { data: { session }, error } = await supabase.auth.getSession();
@@ -31,8 +35,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(session?.user ?? null);
             setLoading(false);
             if (session?.user) {
-                // Import dynamically to avoid circular dependencies if any, or just use the hook if possible
-                // But here we are in a provider. We can just import the store.
                 const { useStore } = await import('@/lib/store');
                 useStore.getState().loadUserData();
             }
@@ -45,6 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (session?.user) {
                 const { useStore } = await import('@/lib/store');
                 useStore.getState().loadUserData();
+            } else if (!loading && pathname !== '/login' && pathname !== '/auth/callback') {
+                router.push('/login');
             }
         });
 
@@ -54,6 +58,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             listener.subscription.unsubscribe();
         };
     }, []);
+
+    useEffect(() => {
+        if (!loading && !session && pathname !== '/login' && pathname !== '/auth/callback') {
+            router.push('/login');
+        }
+    }, [loading, session, pathname, router]);
 
     const signOut = async () => {
         await supabase.auth.signOut();

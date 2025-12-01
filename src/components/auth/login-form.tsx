@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 export function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [mode, setMode] = useState<'login' | 'signup'>('login');
@@ -27,6 +28,11 @@ export function LoginForm() {
                 const { error } = await supabase.auth.signUp({
                     email,
                     password,
+                    options: {
+                        data: {
+                            username,
+                        },
+                    },
                 });
                 if (error) throw error;
                 setMessage('Check your email for the confirmation link!');
@@ -69,6 +75,22 @@ export function LoginForm() {
                             <AlertDescription>{message}</AlertDescription>
                         </Alert>
                     )}
+
+                    {mode === 'signup' && (
+                        <div className="space-y-2">
+                            <Label htmlFor="username" className="text-xs uppercase tracking-widest text-white/60 font-bold">Usuario</Label>
+                            <Input
+                                id="username"
+                                type="text"
+                                placeholder="Tu nombre de piloto"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary focus:ring-primary/20 transition-all"
+                            />
+                        </div>
+                    )}
+
                     <div className="space-y-2">
                         <Label htmlFor="email" className="text-xs uppercase tracking-widest text-white/60 font-bold">Email</Label>
                         <Input

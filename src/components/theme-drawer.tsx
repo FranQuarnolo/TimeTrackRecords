@@ -58,11 +58,21 @@ export function ThemeDrawer() {
                             {user ? (
                                 <div className="flex flex-col gap-3 p-4 rounded-xl border border-white/10 bg-white/5">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg border border-primary/30">
-                                            {user.email?.charAt(0).toUpperCase()}
-                                        </div>
+                                        {user.user_metadata?.avatar_url ? (
+                                            <img
+                                                src={user.user_metadata.avatar_url}
+                                                alt="Avatar"
+                                                className="h-10 w-10 rounded-full border border-primary/30"
+                                            />
+                                        ) : (
+                                            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg border border-primary/30">
+                                                {(user.user_metadata?.username || user.email || 'U').charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
                                         <div className="flex flex-col overflow-hidden">
-                                            <span className="text-sm font-bold text-white truncate">{user.user_metadata?.username || 'Usuario'}</span>
+                                            <span className="text-sm font-bold text-white truncate">
+                                                {user.user_metadata?.full_name || user.user_metadata?.username || 'Piloto'}
+                                            </span>
                                             <span className="text-xs text-white/50 truncate">{user.email}</span>
                                         </div>
                                     </div>
@@ -70,7 +80,10 @@ export function ThemeDrawer() {
                                         variant="destructive"
                                         size="sm"
                                         className="w-full mt-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                                        onClick={() => signOut()}
+                                        onClick={async () => {
+                                            await signOut()
+                                            router.push('/login')
+                                        }}
                                     >
                                         <LogOut className="h-4 w-4 mr-2" />
                                         Cerrar Sesión
@@ -78,7 +91,7 @@ export function ThemeDrawer() {
                                 </div>
                             ) : (
                                 <div className="p-4 rounded-xl border border-white/10 bg-white/5 text-center">
-                                    <p className="text-sm text-white/60 mb-3">Inicia sesión para guardar tus tiempos en la nube.</p>
+                                    <p className="text-sm text-white/60 mb-3">Inicia sesión para guardar tus tiempos.</p>
                                     <Button
                                         className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                                         onClick={() => router.push('/login')}
