@@ -8,10 +8,12 @@ interface AppState {
     circuits: Circuit[];
     cars: Car[];
     teamTheme: TeamTheme;
+    themeMode: 'light' | 'dark' | 'system';
     addLap: (lap: LapTime) => Promise<void>;
     getBestTime: (circuitId: string, type: 'qualifying' | 'race') => number | null;
     toggleFavorite: (circuitId: string) => Promise<void>;
     setTeamTheme: (theme: TeamTheme) => Promise<void>;
+    setThemeMode: (mode: 'light' | 'dark' | 'system') => Promise<void>;
     syncCircuits: () => void;
     addCar: (name: string) => Promise<void>;
     loadUserData: () => Promise<void>;
@@ -106,6 +108,7 @@ export const useStore = create<AppState>()(
             circuits: INITIAL_CIRCUITS,
             cars: INITIAL_CARS,
             teamTheme: 'default',
+            themeMode: 'system',
 
             loadUserData: async () => {
                 const { data: { user } } = await supabase.auth.getUser();
@@ -114,12 +117,15 @@ export const useStore = create<AppState>()(
                 // Load Profile (Theme)
                 const { data: profile } = await supabase
                     .from('profiles')
-                    .select('team_theme')
+                    .select('team_theme, theme_mode')
                     .eq('id', user.id)
                     .single();
 
                 if (profile) {
                     set({ teamTheme: profile.team_theme as TeamTheme });
+                    if (profile.theme_mode) {
+                        set({ themeMode: profile.theme_mode as 'light' | 'dark' | 'system' });
+                    }
                 }
 
                 // Load Laps
@@ -234,6 +240,14 @@ export const useStore = create<AppState>()(
                 const { data: { user } } = await supabase.auth.getUser();
                 if (user) {
                     await supabase.from('profiles').update({ team_theme: theme }).eq('id', user.id);
+                }
+            },
+
+            setThemeMode: async (mode) => {
+                set({ themeMode: mode });
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    await supabase.from('profiles').update({ theme_mode: mode }).eq('id', user.id);
                 }
             },
 

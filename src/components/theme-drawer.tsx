@@ -1,6 +1,6 @@
 "use client"
 
-import { Settings, Moon, Sun, LogOut } from "lucide-react"
+import { Settings, Moon, Sun, LogOut, UserCog } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth/auth-provider"
@@ -77,9 +77,20 @@ export function ThemeDrawer() {
                                         </div>
                                     </div>
                                     <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="w-full mt-2 bg-white/5 hover:bg-white/10 text-white border-white/10"
+                                        onClick={() => {
+                                            router.push('/configuracion')
+                                        }}
+                                    >
+                                        <UserCog className="h-4 w-4 mr-2" />
+                                        Editar Perfil
+                                    </Button>
+                                    <Button
                                         variant="destructive"
                                         size="sm"
-                                        className="w-full mt-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
+                                        className="w-full mt-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
                                         onClick={async () => {
                                             await signOut()
                                             router.push('/login')
@@ -100,6 +111,54 @@ export function ThemeDrawer() {
                                     </Button>
                                 </div>
                             )}
+                        </div>
+
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Tema</h3>
+                            <div className="grid grid-cols-3 gap-3">
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        "border-white/10 bg-white/5 hover:bg-white/10 hover:text-white",
+                                        theme === 'light' && "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+                                    )}
+                                    onClick={() => {
+                                        setTheme('light')
+                                        useStore.getState().setThemeMode('light')
+                                    }}
+                                >
+                                    <Sun className="h-4 w-4 mr-2" />
+                                    Claro
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        "border-white/10 bg-white/5 hover:bg-white/10 hover:text-white",
+                                        theme === 'dark' && "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+                                    )}
+                                    onClick={() => {
+                                        setTheme('dark')
+                                        useStore.getState().setThemeMode('dark')
+                                    }}
+                                >
+                                    <Moon className="h-4 w-4 mr-2" />
+                                    Oscuro
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        "border-white/10 bg-white/5 hover:bg-white/10 hover:text-white",
+                                        theme === 'system' && "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+                                    )}
+                                    onClick={() => {
+                                        setTheme('system')
+                                        useStore.getState().setThemeMode('system')
+                                    }}
+                                >
+                                    <Settings className="h-4 w-4 mr-2" />
+                                    Sistema
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="space-y-4">

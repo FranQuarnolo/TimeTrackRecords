@@ -3,6 +3,7 @@ create table public.profiles (
   id uuid references auth.users not null primary key,
   username text,
   team_theme text,
+  theme_mode text default 'system',
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -85,8 +86,8 @@ create policy "Users can update their own circuit settings." on public.user_circ
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, username, team_theme)
-  values (new.id, new.raw_user_meta_data->>'username', 'default');
+  insert into public.profiles (id, username, team_theme, theme_mode)
+  values (new.id, new.raw_user_meta_data->>'username', 'default', 'system');
   return new;
 end;
 $$ language plpgsql security definer;

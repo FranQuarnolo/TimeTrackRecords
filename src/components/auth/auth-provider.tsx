@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 interface AuthContextType {
     session: Session | null;
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [session, setSession] = useState<Session | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const { setTheme } = useTheme();
 
     const router = useRouter();
     const pathname = usePathname();
@@ -34,9 +36,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setSession(session);
             setUser(session?.user ?? null);
             setLoading(false);
+
             if (session?.user) {
                 const { useStore } = await import('@/lib/store');
-                useStore.getState().loadUserData();
+                await useStore.getState().loadUserData();
+                const themeMode = useStore.getState().themeMode;
+                if (themeMode && themeMode !== 'system') {
+                    setTheme(themeMode);
+                }
             }
         };
 
