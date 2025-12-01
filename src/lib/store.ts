@@ -1,18 +1,20 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { LapTime, Circuit, TeamTheme, Car } from '@/types';
+import { supabase } from './supabase';
 
 interface AppState {
     laps: LapTime[];
     circuits: Circuit[];
     cars: Car[];
     teamTheme: TeamTheme;
-    addLap: (lap: LapTime) => void;
+    addLap: (lap: LapTime) => Promise<void>;
     getBestTime: (circuitId: string, type: 'qualifying' | 'race') => number | null;
-    toggleFavorite: (circuitId: string) => void;
-    setTeamTheme: (theme: TeamTheme) => void;
+    toggleFavorite: (circuitId: string) => Promise<void>;
+    setTeamTheme: (theme: TeamTheme) => Promise<void>;
     syncCircuits: () => void;
-    addCar: (name: string) => void;
+    addCar: (name: string) => Promise<void>;
+    loadUserData: () => Promise<void>;
 }
 
 // Initial circuits data
@@ -104,25 +106,99 @@ export const useStore = create<AppState>()(
             circuits: INITIAL_CIRCUITS,
             cars: INITIAL_CARS,
             teamTheme: 'default',
-            addLap: (lap) => set((state) => {
-                // Get all laps for this circuit and type
-                const existingLaps = state.laps.filter(
-                    l => l.circuitId === lap.circuitId && l.type === lap.type
-                );
 
-                // Combine with new lap
-                const allLaps = [...existingLaps, lap];
+            loadUserData: async () => {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
 
-                // Sort by time (asc)
-                const sortedLaps = allLaps.sort((a, b) => a.time - b.time);
+                // Load Profile (Theme)
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('team_theme')
+                    .eq('id', user.id)
+                    .single();
 
-                // Get laps that are NOT for this circuit/type (to preserve them)
-                const otherLaps = state.laps.filter(
-                    l => !(l.circuitId === lap.circuitId && l.type === lap.type)
-                );
+                if (profile) {
+                    set({ teamTheme: profile.team_theme as TeamTheme });
+                }
 
-                return { laps: [...otherLaps, ...sortedLaps] };
-            }),
+                // Load Laps
+                const { data: laps } = await supabase
+                    .from('laps')
+                    .select('*');
+
+                if (laps) {
+                    const formattedLaps: LapTime[] = laps.map(l => ({
+                        id: l.id,
+                        circuitId: l.circuit_id,
+                        time: Number(l.time),
+                        date: l.created_at,
+                        type: l.type as 'qualifying' | 'race',
+                        carModel: l.car_id
+                    }));
+                    set({ laps: formattedLaps });
+                }
+
+                // Load User Cars
+                const { data: userCars } = await supabase
+                    .from('user_cars')
+                    .select('*');
+
+                if (userCars) {
+                    const formattedCars: Car[] = userCars.map(c => ({
+                        id: c.id, // Use UUID from DB
+                        name: c.name,
+                        category: c.category,
+                        brand: c.brand
+                    }));
+                    set(state => ({ cars: [...INITIAL_CARS, ...formattedCars] }));
+                }
+
+                // Load Favorites
+                const { data: favorites } = await supabase
+                    .from('user_circuit_settings')
+                    .select('circuit_id, is_favorite')
+                    .eq('is_favorite', true);
+
+                if (favorites) {
+                    const favIds = new Set(favorites.map(f => f.circuit_id));
+                    set(state => ({
+                        circuits: state.circuits.map(c => ({
+                            ...c,
+                            isFavorite: favIds.has(c.id)
+                        }))
+                    }));
+                }
+            },
+
+            addLap: async (lap) => {
+                // Optimistic update
+                set((state) => {
+                    const existingLaps = state.laps.filter(
+                        l => l.circuitId === lap.circuitId && l.type === lap.type
+                    );
+                    const allLaps = [...existingLaps, lap];
+                    const sortedLaps = allLaps.sort((a, b) => a.time - b.time);
+                    const otherLaps = state.laps.filter(
+                        l => !(l.circuitId === lap.circuitId && l.type === lap.type)
+                    );
+                    return { laps: [...otherLaps, ...sortedLaps] };
+                });
+
+                // Supabase insert
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    await supabase.from('laps').insert({
+                        user_id: user.id,
+                        circuit_id: lap.circuitId,
+                        car_id: lap.carModel || 'unknown',
+                        time: lap.time,
+                        type: lap.type,
+                        created_at: lap.date
+                    });
+                }
+            },
+
             getBestTime: (circuitId, type) => {
                 const { laps } = get();
                 const circuitLaps = laps.filter(
@@ -131,12 +207,36 @@ export const useStore = create<AppState>()(
                 if (circuitLaps.length === 0) return null;
                 return Math.min(...circuitLaps.map((l) => l.time));
             },
-            toggleFavorite: (circuitId) => set((state) => ({
-                circuits: state.circuits.map((c) =>
-                    c.id === circuitId ? { ...c, isFavorite: !c.isFavorite } : c
-                )
-            })),
-            setTeamTheme: (theme) => set({ teamTheme: theme }),
+
+            toggleFavorite: async (circuitId) => {
+                set((state) => {
+                    const newCircuits = state.circuits.map((c) =>
+                        c.id === circuitId ? { ...c, isFavorite: !c.isFavorite } : c
+                    );
+                    return { circuits: newCircuits };
+                });
+
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const circuit = get().circuits.find(c => c.id === circuitId);
+                    if (circuit) {
+                        await supabase.from('user_circuit_settings').upsert({
+                            user_id: user.id,
+                            circuit_id: circuitId,
+                            is_favorite: circuit.isFavorite
+                        });
+                    }
+                }
+            },
+
+            setTeamTheme: async (theme) => {
+                set({ teamTheme: theme });
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    await supabase.from('profiles').update({ team_theme: theme }).eq('id', user.id);
+                }
+            },
+
             syncCircuits: () => set((state) => {
                 const currentFavorites = new Set(
                     state.circuits.filter(c => c.isFavorite).map(c => c.id)
@@ -149,15 +249,34 @@ export const useStore = create<AppState>()(
 
                 return { circuits: mergedCircuits };
             }),
-            addCar: (name) => set((state) => {
+
+            addCar: async (name) => {
                 const newCar: Car = {
-                    id: name.toLowerCase().replace(/\s+/g, '_'),
+                    id: name.toLowerCase().replace(/\s+/g, '_'), // Temporary ID for local
                     name: name,
                     category: 'Other',
                     brand: 'Custom'
                 };
-                return { cars: [...state.cars, newCar] };
-            }),
+
+                set((state) => ({ cars: [...state.cars, newCar] }));
+
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const { data } = await supabase.from('user_cars').insert({
+                        user_id: user.id,
+                        name: newCar.name,
+                        brand: newCar.brand,
+                        category: newCar.category
+                    }).select().single();
+
+                    // Update the ID with the real UUID from DB
+                    if (data) {
+                        set(state => ({
+                            cars: state.cars.map(c => c.id === newCar.id ? { ...c, id: data.id } : c)
+                        }));
+                    }
+                }
+            },
         }),
         {
             name: 'timetracks-storage',
