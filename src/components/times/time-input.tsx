@@ -20,8 +20,11 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
     const [milliseconds, setMilliseconds] = useState(0);
     const [selectedCar, setSelectedCar] = useState("");
 
+    const totalMs = (minutes * 60 * 1000) + (seconds * 1000) + milliseconds;
+    const isValid = totalMs > 0 && selectedCar !== "";
+
     const handleSubmit = () => {
-        const totalMs = (minutes * 60 * 1000) + (seconds * 1000) + milliseconds;
+        if (!isValid) return;
         onSubmit(totalMs, selectedCar || undefined);
     };
 
@@ -37,7 +40,7 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center p-4 gap-12 pb-24">
+            <div className="flex-1 flex flex-col items-center justify-center p-6 gap-12 pb-24">
                 {/* Time Picker */}
                 <div className="flex items-center gap-2 text-5xl sm:text-7xl font-mono font-bold select-none text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
                     <NumberPicker
@@ -83,8 +86,9 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
             >
                 <Button
                     size="icon"
-                    className="h-16 w-16 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary/20 hover:scale-110 transition-transform"
+                    className={`h-16 w-16 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary/20 transition-all ${isValid ? 'hover:scale-110' : 'opacity-50 cursor-not-allowed grayscale'}`}
                     onClick={handleSubmit}
+                    disabled={!isValid}
                 >
                     <Save className="h-8 w-8" />
                 </Button>

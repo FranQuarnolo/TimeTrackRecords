@@ -2,6 +2,7 @@
 
 import { Settings } from "lucide-react"
 import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 import { useStore } from "@/lib/store"
 import { TeamTheme } from "@/types"
 import { Button } from "@/components/ui/button"
@@ -30,8 +31,11 @@ export function ThemeDrawer() {
     const { setTheme, theme, resolvedTheme } = useTheme()
     const teamTheme = useStore((state) => state.teamTheme)
     const setTeamTheme = useStore((state) => state.setTeamTheme)
+    const pathname = usePathname()
 
     console.log('ThemeDrawer render:', { theme, resolvedTheme, teamTheme })
+
+    if (pathname !== "/") return null
 
     return (
         <Drawer>

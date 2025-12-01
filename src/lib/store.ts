@@ -10,6 +10,7 @@ interface AppState {
     teamTheme: TeamTheme;
     themeMode: 'light' | 'dark' | 'system';
     addLap: (lap: LapTime) => Promise<void>;
+    removeLap: (lapId: string) => Promise<void>;
     getBestTime: (circuitId: string, type: 'qualifying' | 'race') => number | null;
     toggleFavorite: (circuitId: string) => Promise<void>;
     setTeamTheme: (theme: TeamTheme) => Promise<void>;
@@ -202,6 +203,19 @@ export const useStore = create<AppState>()(
                         type: lap.type,
                         created_at: lap.date
                     });
+                }
+            },
+
+            removeLap: async (lapId) => {
+                // Optimistic update
+                set((state) => ({
+                    laps: state.laps.filter(l => l.id !== lapId)
+                }));
+
+                // Supabase delete
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    await supabase.from('laps').delete().eq('id', lapId).eq('user_id', user.id);
                 }
             },
 
