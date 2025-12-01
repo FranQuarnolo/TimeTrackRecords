@@ -86,7 +86,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                             placeholder="Buscar por nombre, marca o categoría..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            autoFocus
+                        // autoFocus removed to prevent keyboard from opening automatically
                         />
                     </div>
                 </div>
@@ -98,7 +98,7 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                                 <Button
                                     variant="ghost"
                                     className={cn(
-                                        "justify-start h-auto py-4 px-5 text-lg font-normal transition-all border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:scale-[1.02] group relative overflow-hidden",
+                                        "justify-start h-auto py-3 px-4 text-sm font-normal transition-all border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:scale-[1.02] group relative overflow-hidden",
                                         value === car.name && "bg-primary/10 border-primary/50 text-white ring-1 ring-primary/50"
                                     )}
                                     onClick={() => {

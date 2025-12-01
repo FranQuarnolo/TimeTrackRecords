@@ -55,25 +55,32 @@ export function Header() {
                                         )}
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-64" align="end" forceMount>
-                                    <DropdownMenuLabel className="font-normal">
-                                        <div className="flex flex-col space-y-1">
-                                            <p className="text-sm font-medium leading-none">{user.user_metadata?.username || 'Usuario'}</p>
-                                            <p className="text-xs leading-none text-muted-foreground">
+                                <DropdownMenuContent
+                                    className="w-72 bg-black/60 backdrop-blur-xl border-none text-white shadow-[0_0_50px_-10px_var(--primary)] animate-in fade-in zoom-in-95 duration-300 p-2"
+                                    align="end"
+                                    forceMount
+                                >
+                                    <DropdownMenuLabel className="font-normal p-3">
+                                        <div className="flex flex-col space-y-2">
+                                            <p className="text-lg font-bold leading-none tracking-wide">{user.user_metadata?.username || 'Usuario'}</p>
+                                            <p className="text-sm leading-none text-white/50 font-mono">
                                                 {user.email}
                                             </p>
                                         </div>
                                     </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => router.push('/configuracion')}>
-                                        <UserCog className="mr-2 h-4 w-4" />
+                                    <DropdownMenuSeparator className="bg-white/10" />
+                                    <DropdownMenuItem
+                                        onClick={() => router.push('/configuracion')}
+                                        className="p-3 text-base font-medium focus:bg-white/10 focus:text-white cursor-pointer"
+                                    >
+                                        <UserCog className="mr-3 h-5 w-5" />
                                         <span>Editar Perfil</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={async () => {
                                         await signOut();
                                         router.push('/login');
-                                    }} className="text-red-500 focus:text-red-500">
-                                        <LogOut className="mr-2 h-4 w-4" />
+                                    }} className="p-3 text-base font-medium text-red-400 focus:text-red-400 focus:bg-red-500/10 cursor-pointer">
+                                        <LogOut className="mr-3 h-5 w-5" />
                                         <span>Cerrar Sesión</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
