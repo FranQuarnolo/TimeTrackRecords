@@ -24,11 +24,6 @@ export default function MisTiemposPage() {
                         className="space-y-6"
                     >
                         <div className="flex items-center gap-4">
-                            <Button asChild variant="ghost" size="icon" className="text-white hover:text-primary hover:bg-white/10">
-                                <Link href="/">
-                                    <ChevronLeft className="h-6 w-6" />
-                                </Link>
-                            </Button>
                             <h1 className="text-3xl font-bold italic tracking-tighter uppercase">Mis Tiempos</h1>
                         </div>
 

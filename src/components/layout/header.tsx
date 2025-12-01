@@ -3,12 +3,22 @@
 import { Flag, ChevronLeft, Timer } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ThemeDrawer } from "@/components/theme-drawer";
+import { useAuth } from "@/components/auth/auth-provider";
+import { User, LogOut, UserCog } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
     const router = useRouter();
     const pathname = usePathname();
     const isHome = pathname === "/";
+    const { user, signOut } = useAuth();
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/20 backdrop-blur-md shadow-sm">
@@ -27,7 +37,53 @@ export function Header() {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <ThemeDrawer />
+                    <div className="flex items-center gap-2">
+                        {user ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0 overflow-hidden border border-primary/30 hover:border-primary transition-colors">
+                                        {user.user_metadata?.avatar_url ? (
+                                            <img
+                                                src={user.user_metadata.avatar_url}
+                                                alt="Avatar"
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="h-full w-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                                                {(user.user_metadata?.username || user.email || 'U').charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-64" align="end" forceMount>
+                                    <DropdownMenuLabel className="font-normal">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none">{user.user_metadata?.username || 'Usuario'}</p>
+                                            <p className="text-xs leading-none text-muted-foreground">
+                                                {user.email}
+                                            </p>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => router.push('/configuracion')}>
+                                        <UserCog className="mr-2 h-4 w-4" />
+                                        <span>Editar Perfil</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={async () => {
+                                        await signOut();
+                                        router.push('/login');
+                                    }} className="text-red-500 focus:text-red-500">
+                                        <LogOut className="mr-2 h-4 w-4" />
+                                        <span>Cerrar Sesión</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm border border-primary/30">
+                                <User className="h-4 w-4" />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </header>

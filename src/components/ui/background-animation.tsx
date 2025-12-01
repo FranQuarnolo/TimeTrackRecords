@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-export function BackgroundAnimation() {
+export function BackgroundAnimation({ backgroundImage = "/background.png" }: { backgroundImage?: string }) {
     return (
         <div className="fixed inset-0 z-0 pointer-events-none">
             <motion.div
@@ -13,7 +13,7 @@ export function BackgroundAnimation() {
                 className="relative w-full h-full"
             >
                 <Image
-                    src="/background.png"
+                    src={backgroundImage}
                     alt="Background"
                     fill
                     className="object-cover opacity-80"

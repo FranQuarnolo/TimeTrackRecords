@@ -28,7 +28,7 @@ export const getBrandIcon = (brand?: string) => {
                     src={logoPath}
                     alt={`${brand} logo`}
                     fill
-                    className="object-contain"
+                    className="object-contain brightness-0 invert"
                 />
             </div>
         );

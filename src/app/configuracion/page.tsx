@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Loader2, Upload, User as UserIcon, Mail, Lock, AlertCircle, CheckCircle2 } from "lucide-react"
+import { Loader2, Upload, User as UserIcon, Mail, Lock, AlertCircle, CheckCircle2, ChevronLeft } from "lucide-react"
 
 export default function SettingsPage() {
     const { user, loading: authLoading } = useAuth()
@@ -216,9 +216,18 @@ export default function SettingsPage() {
     return (
         <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-20">
             <div className="max-w-2xl mx-auto space-y-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-black italic uppercase tracking-tighter">Configuración</h1>
-                    <Button variant="ghost" onClick={() => router.back()}>Volver</Button>
+                <div className="flex flex-col gap-4">
+                    <div className="flex justify-start">
+                        <Button
+                            variant="ghost"
+                            onClick={() => router.back()}
+                            className="text-primary hover:text-primary/80 hover:bg-primary/10 pl-0 gap-2"
+                        >
+                            <ChevronLeft className="h-5 w-5" />
+                            Volver
+                        </Button>
+                    </div>
+                    <h1 className="text-4xl font-black italic uppercase tracking-tighter">Configuración</h1>
                 </div>
 
                 <Card className="bg-white/5 border-white/10 text-white">

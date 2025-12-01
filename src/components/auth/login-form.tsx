@@ -16,6 +16,7 @@ export function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const [mode, setMode] = useState<'login' | 'signup'>('login');
     const [message, setMessage] = useState<string | null>(null);
+    const [successLoading, setSuccessLoading] = useState(false);
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,20 +37,49 @@ export function LoginForm() {
                 });
                 if (error) throw error;
                 setMessage('Check your email for the confirmation link!');
+                setLoading(false);
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
                     password,
                 });
                 if (error) throw error;
-                setMessage('Login successful!');
+
+                // Show success animation
+                setSuccessLoading(true);
+                // The actual redirection happens via the AuthProvider listener, 
+                // but we want to show the animation for a bit.
+                // We'll let the AuthProvider handle the redirect, but the overlay will cover everything.
             }
         } catch (err: any) {
             setError(err.message);
-        } finally {
             setLoading(false);
         }
     };
+
+    if (successLoading) {
+        return (
+            <Card className="w-full max-w-md bg-black/40 backdrop-blur-xl border-white/10 text-white shadow-[0_0_40px_-15px_var(--primary)] animate-in fade-in zoom-in duration-500">
+                <CardContent className="flex flex-col items-center justify-center py-12 space-y-8">
+                    <div className="relative">
+                        {/* Spinning wheel animation */}
+                        <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-8 h-8 bg-primary/20 rounded-full animate-pulse" />
+                        </div>
+                    </div>
+                    <div className="text-center space-y-2">
+                        <h3 className="text-xl font-bold italic uppercase tracking-wider text-white">
+                            Conectando...
+                        </h3>
+                        <p className="text-sm text-white/50 font-mono">
+                            Sincronizando telemetría
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
         <Card className="w-full max-w-md bg-black/40 backdrop-blur-xl border-white/10 text-white shadow-[0_0_40px_-15px_var(--primary)]">

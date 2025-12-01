@@ -1,9 +1,7 @@
 "use client"
 
-import { Settings, Moon, Sun, LogOut, UserCog } from "lucide-react"
+import { Settings } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/components/auth/auth-provider"
 import { useStore } from "@/lib/store"
 import { TeamTheme } from "@/types"
 import { Button } from "@/components/ui/button"
@@ -32,8 +30,6 @@ export function ThemeDrawer() {
     const { setTheme, theme, resolvedTheme } = useTheme()
     const teamTheme = useStore((state) => state.teamTheme)
     const setTeamTheme = useStore((state) => state.setTeamTheme)
-    const { user, signOut } = useAuth()
-    const router = useRouter()
 
     console.log('ThemeDrawer render:', { theme, resolvedTheme, teamTheme })
 
@@ -53,113 +49,9 @@ export function ThemeDrawer() {
 
                     <div className="p-4 space-y-8">
                         {/* User Profile Section */}
-                        <div className="space-y-4">
-                            <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Perfil</h3>
-                            {user ? (
-                                <div className="flex flex-col gap-3 p-4 rounded-xl border border-white/10 bg-white/5">
-                                    <div className="flex items-center gap-3">
-                                        {user.user_metadata?.avatar_url ? (
-                                            <img
-                                                src={user.user_metadata.avatar_url}
-                                                alt="Avatar"
-                                                className="h-10 w-10 rounded-full border border-primary/30"
-                                            />
-                                        ) : (
-                                            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg border border-primary/30">
-                                                {(user.user_metadata?.username || user.email || 'U').charAt(0).toUpperCase()}
-                                            </div>
-                                        )}
-                                        <div className="flex flex-col overflow-hidden">
-                                            <span className="text-sm font-bold text-white truncate">
-                                                {user.user_metadata?.full_name || user.user_metadata?.username || 'Piloto'}
-                                            </span>
-                                            <span className="text-xs text-white/50 truncate">{user.email}</span>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="w-full mt-2 bg-white/5 hover:bg-white/10 text-white border-white/10"
-                                        onClick={() => {
-                                            router.push('/configuracion')
-                                        }}
-                                    >
-                                        <UserCog className="h-4 w-4 mr-2" />
-                                        Editar Perfil
-                                    </Button>
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        className="w-full mt-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                                        onClick={async () => {
-                                            await signOut()
-                                            router.push('/login')
-                                        }}
-                                    >
-                                        <LogOut className="h-4 w-4 mr-2" />
-                                        Cerrar Sesión
-                                    </Button>
-                                </div>
-                            ) : (
-                                <div className="p-4 rounded-xl border border-white/10 bg-white/5 text-center">
-                                    <p className="text-sm text-white/60 mb-3">Inicia sesión para guardar tus tiempos.</p>
-                                    <Button
-                                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                                        onClick={() => router.push('/login')}
-                                    >
-                                        Iniciar Sesión
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
 
-                        <div className="space-y-4">
-                            <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Tema</h3>
-                            <div className="grid grid-cols-3 gap-3">
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "border-white/10 bg-white/5 hover:bg-white/10 hover:text-white",
-                                        theme === 'light' && "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
-                                    )}
-                                    onClick={() => {
-                                        setTheme('light')
-                                        useStore.getState().setThemeMode('light')
-                                    }}
-                                >
-                                    <Sun className="h-4 w-4 mr-2" />
-                                    Claro
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "border-white/10 bg-white/5 hover:bg-white/10 hover:text-white",
-                                        theme === 'dark' && "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
-                                    )}
-                                    onClick={() => {
-                                        setTheme('dark')
-                                        useStore.getState().setThemeMode('dark')
-                                    }}
-                                >
-                                    <Moon className="h-4 w-4 mr-2" />
-                                    Oscuro
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "border-white/10 bg-white/5 hover:bg-white/10 hover:text-white",
-                                        theme === 'system' && "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
-                                    )}
-                                    onClick={() => {
-                                        setTheme('system')
-                                        useStore.getState().setThemeMode('system')
-                                    }}
-                                >
-                                    <Settings className="h-4 w-4 mr-2" />
-                                    Sistema
-                                </Button>
-                            </div>
-                        </div>
+
+
 
                         <div className="space-y-4">
                             <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">Escudería</h3>
