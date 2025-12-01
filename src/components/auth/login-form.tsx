@@ -36,6 +36,7 @@ export function LoginForm() {
                     password,
                 });
                 if (error) throw error;
+                setMessage('Login successful!');
             }
         } catch (err: any) {
             setError(err.message);
@@ -45,61 +46,69 @@ export function LoginForm() {
     };
 
     return (
-        <Card className="w-[350px] mx-auto mt-10">
-            <CardHeader>
-                <CardTitle>{mode === 'login' ? 'Login' : 'Sign Up'}</CardTitle>
-                <CardDescription>
+        <Card className="w-full max-w-md bg-black/40 backdrop-blur-xl border-white/10 text-white shadow-[0_0_40px_-15px_var(--primary)]">
+            <CardHeader className="space-y-1 text-center">
+                <CardTitle className="text-3xl font-black italic uppercase tracking-tighter">
+                    {mode === 'login' ? 'Bienvenido' : 'Crear Cuenta'}
+                </CardTitle>
+                <CardDescription className="text-white/50">
                     {mode === 'login'
-                        ? 'Enter your credentials to access your account'
-                        : 'Create a new account to save your progress'}
+                        ? 'Ingresa tus credenciales para acceder'
+                        : 'Regístrate para guardar tu progreso'}
                 </CardDescription>
             </CardHeader>
             <form onSubmit={handleAuth}>
                 <CardContent className="space-y-4">
                     {error && (
-                        <Alert variant="destructive">
+                        <Alert variant="destructive" className="bg-red-500/10 border-red-500/20 text-red-500">
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
                     {message && (
-                        <Alert>
+                        <Alert className="bg-green-500/10 border-green-500/20 text-green-500">
                             <AlertDescription>{message}</AlertDescription>
                         </Alert>
                     )}
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email" className="text-xs uppercase tracking-widest text-white/60 font-bold">Email</Label>
                         <Input
                             id="email"
                             type="email"
-                            placeholder="m@example.com"
+                            placeholder="piloto@ejemplo.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary focus:ring-primary/20 transition-all"
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password" className="text-xs uppercase tracking-widest text-white/60 font-bold">Contraseña</Label>
                         <Input
                             id="password"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            className="bg-white/5 border-white/10 text-white focus:border-primary focus:ring-primary/20 transition-all"
                         />
                     </div>
                 </CardContent>
-                <CardFooter className="flex flex-col space-y-2">
-                    <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? 'Loading...' : mode === 'login' ? 'Login' : 'Sign Up'}
+                <CardFooter className="flex flex-col space-y-4">
+                    <Button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider shadow-[0_0_20px_-5px_var(--primary)] transition-all hover:scale-[1.02]"
+                        disabled={loading}
+                    >
+                        {loading ? 'Cargando...' : mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}
                     </Button>
 
                     <div className="relative w-full">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
+                            <span className="w-full border-t border-white/10" />
                         </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                                Or continue with
+                        <div className="relative flex justify-center text-xs uppercase tracking-widest">
+                            <span className="bg-black/40 px-2 text-white/40 backdrop-blur-xl">
+                                O continúa con
                             </span>
                         </div>
                     </div>
@@ -107,7 +116,7 @@ export function LoginForm() {
                     <Button
                         type="button"
                         variant="outline"
-                        className="w-full"
+                        className="w-full bg-white text-black hover:bg-white/90 border-0 font-bold"
                         disabled={loading}
                         onClick={async () => {
                             setLoading(true);
@@ -149,12 +158,12 @@ export function LoginForm() {
                     <Button
                         type="button"
                         variant="ghost"
-                        className="w-full"
+                        className="w-full text-white/50 hover:text-white hover:bg-white/5"
                         onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
                     >
                         {mode === 'login'
-                            ? "Don't have an account? Sign up"
-                            : 'Already have an account? Login'}
+                            ? "¿No tienes cuenta? Regístrate"
+                            : '¿Ya tienes cuenta? Inicia Sesión'}
                     </Button>
                 </CardFooter>
             </form>
