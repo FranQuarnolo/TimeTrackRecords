@@ -7,7 +7,7 @@ import { BackgroundAnimation } from "@/components/ui/background-animation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import { ExportButton } from "@/components/ui/export-button";
 
 export default function MisTiemposPage() {
     return (
@@ -23,8 +23,9 @@ export default function MisTiemposPage() {
                         transition={{ duration: 0.5 }}
                         className="space-y-6"
                     >
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-between gap-4">
                             <h1 className="text-3xl font-bold italic tracking-tighter uppercase">Mis Tiempos</h1>
+                            <ExportButton />
                         </div>
 
                         <Tabs defaultValue="qualifying" className="w-full">

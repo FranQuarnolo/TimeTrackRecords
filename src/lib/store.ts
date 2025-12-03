@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { LapTime, Circuit, TeamTheme, Car } from '@/types';
+import { LapTime, Circuit, TeamTheme, Car, Setup } from '@/types';
 import { supabase } from './supabase';
 
 interface AppState {
     laps: LapTime[];
     circuits: Circuit[];
     cars: Car[];
+    setups: Setup[];
     teamTheme: TeamTheme;
     themeMode: 'light' | 'dark' | 'system';
     addLap: (lap: LapTime) => Promise<void>;
@@ -18,6 +19,8 @@ interface AppState {
     syncCircuits: () => void;
     addCar: (name: string) => Promise<void>;
     loadUserData: () => Promise<void>;
+    addSetup: (setup: Omit<Setup, 'id' | 'created_at'>) => Promise<void>;
+    updateSetup: (setup: Setup) => Promise<void>;
 }
 
 // Initial circuits data
@@ -108,6 +111,7 @@ export const useStore = create<AppState>()(
             laps: [],
             circuits: INITIAL_CIRCUITS,
             cars: INITIAL_CARS,
+            setups: [],
             teamTheme: 'default',
             themeMode: 'system',
 
@@ -159,6 +163,38 @@ export const useStore = create<AppState>()(
                         brand: c.brand
                     }));
                     set(state => ({ cars: [...INITIAL_CARS, ...formattedCars] }));
+                }
+
+                // Load Setups
+                const { data: setups } = await supabase
+                    .from('setups')
+                    .select('*');
+
+                if (setups) {
+                    const formattedSetups: Setup[] = setups.map(s => {
+                        let parsedPressure = s.pressure;
+                        if (typeof s.pressure === 'string') {
+                            try {
+                                parsedPressure = JSON.parse(s.pressure);
+                            } catch {
+                                // If it's a simple string (old format), map it to all wheels or keep as is if structure allows
+                                parsedPressure = { fl: s.pressure, fr: s.pressure, rl: s.pressure, rr: s.pressure };
+                            }
+                        }
+
+                        return {
+                            id: s.id,
+                            carId: s.car_id || s.carId, // Handle snake_case from DB
+                            name: s.name,
+                            sessionType: s.session_type || 'Qualy', // Default to Qualy if missing
+                            tires: s.tires,
+                            pressure: parsedPressure || { fl: '', fr: '', rl: '', rr: '' },
+                            fuel: s.fuel,
+                            notes: s.notes,
+                            created_at: s.created_at
+                        };
+                    });
+                    set({ setups: formattedSetups });
                 }
 
                 // Load Favorites
@@ -303,6 +339,69 @@ export const useStore = create<AppState>()(
                             cars: state.cars.map(c => c.id === newCar.id ? { ...c, id: data.id } : c)
                         }));
                     }
+                }
+            },
+
+            addSetup: async (setupData) => {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                const { data } = await supabase.from('setups').insert({
+                    user_id: user.id,
+                    car_id: setupData.carId,
+                    name: setupData.name,
+                    session_type: setupData.sessionType,
+                    tires: setupData.tires,
+                    pressure: setupData.pressure,
+                    fuel: setupData.fuel,
+                    notes: setupData.notes
+                }).select().single();
+
+                if (data) {
+                    // Map the response back to Setup type
+                    const newSetup: Setup = {
+                        id: data.id,
+                        carId: data.car_id,
+                        name: data.name,
+                        sessionType: data.session_type || 'Qualy',
+                        tires: data.tires,
+                        pressure: data.pressure, // Assuming DB returns object/json
+                        fuel: data.fuel,
+                        notes: data.notes,
+                        created_at: data.created_at
+                    };
+                    set(state => ({ setups: [...state.setups, newSetup] }));
+                }
+            },
+
+            updateSetup: async (setup) => {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                const { data } = await supabase.from('setups').update({
+                    name: setup.name,
+                    session_type: setup.sessionType,
+                    tires: setup.tires,
+                    pressure: setup.pressure,
+                    fuel: setup.fuel,
+                    notes: setup.notes
+                }).eq('id', setup.id).select().single();
+
+                if (data) {
+                    const updatedSetup: Setup = {
+                        id: data.id,
+                        carId: data.car_id,
+                        name: data.name,
+                        sessionType: data.session_type || 'Qualy',
+                        tires: data.tires,
+                        pressure: data.pressure,
+                        fuel: data.fuel,
+                        notes: data.notes,
+                        created_at: data.created_at
+                    };
+                    set(state => ({
+                        setups: state.setups.map(s => s.id === setup.id ? updatedSetup : s)
+                    }));
                 }
             },
         }),

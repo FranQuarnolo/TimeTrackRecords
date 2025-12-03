@@ -25,3 +25,20 @@ export interface Car {
   category: string;
   brand?: string;
 }
+
+export interface Setup {
+  id: string;
+  carId: string;
+  name: string;
+  sessionType: 'Qualy' | 'Race';
+  tires: string;
+  pressure: {
+    fl: string;
+    fr: string;
+    rl: string;
+    rr: string;
+  };
+  fuel: string;
+  notes: string;
+  created_at: string;
+}
