@@ -53,13 +53,13 @@ export function CarSelector({ value, onSelect }: CarSelectorProps) {
                     className="w-full justify-between h-20 rounded-2xl border border-white/10 bg-black/40 px-6 text-xl font-normal hover:bg-black/60 hover:border-primary/50 text-white transition-all shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] group"
                 >
                     {value ? (
-                        <div className="flex items-center gap-4">
-                            <div className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-transform group-hover:scale-110 duration-300">
+                        <div className="flex items-center gap-4 min-w-0">
+                            <div className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-transform group-hover:scale-110 duration-300 shrink-0">
                                 {getBrandIcon(selectedCar?.brand)}
                             </div>
-                            <div className="flex flex-col items-start text-left">
-                                <span className="text-xs text-white/50 uppercase tracking-wider font-bold">{selectedCar?.brand || 'Custom'}</span>
-                                <span className="truncate font-mono uppercase tracking-wide text-lg font-bold text-white group-hover:text-primary transition-colors">{value}</span>
+                            <div className="flex flex-col items-start text-left min-w-0 flex-1">
+                                <span className="text-xs text-white/50 uppercase tracking-wider font-bold truncate w-full">{selectedCar?.brand || 'Custom'}</span>
+                                <span className="truncate font-mono uppercase tracking-wide text-lg font-bold text-white group-hover:text-primary transition-colors w-full">{value}</span>
                             </div>
                         </div>
                     ) : (
