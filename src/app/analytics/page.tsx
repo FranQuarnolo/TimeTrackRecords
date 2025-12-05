@@ -4,15 +4,17 @@ import * as React from "react"
 import { useStore } from "@/lib/store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, LineChart, CartesianGrid } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, LineChart, CartesianGrid, Legend, LabelList } from "recharts"
 import { Trophy, TrendingUp, Activity, Timer, Car, ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function AnalyticsPage() {
-    const { laps, circuits, cars } = useStore()
+    const { laps, circuits } = useStore()
+    const [sessionType, setSessionType] = React.useState<'qualifying' | 'race'>('qualifying')
 
     // 1. Best Laps per Circuit
     const bestLapsData = React.useMemo(() => {
@@ -26,40 +28,47 @@ export default function AnalyticsPage() {
                 displayTime: formatTime(bestTime)
             }
         }).filter(Boolean)
-        return data.sort((a, b) => (a?.time || 0) - (b?.time || 0)).slice(0, 5) // Top 5 fastest tracks? Or just list them.
+        return data.sort((a, b) => (a?.time || 0) - (b?.time || 0)).slice(0, 5)
     }, [laps, circuits])
 
-    // 2. Progression (Last 10 sessions)
+    // 2. Progression (Last 10 laps per circuit)
     const progressionData = React.useMemo(() => {
-        // Group by date
-        const sortedLaps = [...laps].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        const lastLaps = sortedLaps.slice(-20) // Last 20 laps
-        return lastLaps.map((lap, index) => ({
-            index: index + 1,
-            time: lap.time / 1000,
-            circuit: circuits.find(c => c.id === lap.circuitId)?.name || 'Unknown',
-            date: format(new Date(lap.date), 'dd/MM')
-        }))
-    }, [laps, circuits])
+        // Filter by session type
+        const filteredLaps = laps.filter(l => l.type === sessionType)
 
-    // 3. Consistency (Standard Deviation per Circuit)
-    const consistencyData = React.useMemo(() => {
-        return circuits.map(circuit => {
-            const circuitLaps = laps.filter(l => l.circuitId === circuit.id)
-            if (circuitLaps.length < 3) return null // Need at least 3 laps for meaningful stats
+        // Group by circuit
+        const lapsByCircuit: Record<string, any[]> = {}
 
-            const times = circuitLaps.map(l => l.time)
-            const mean = times.reduce((a, b) => a + b, 0) / times.length
-            const variance = times.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / times.length
-            const stdDev = Math.sqrt(variance)
+        circuits.forEach(circuit => {
+            const circuitLaps = filteredLaps
+                .filter(l => l.circuitId === circuit.id)
+                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                .slice(-10) // Last 10 laps
 
-            return {
-                name: circuit.name,
-                stdDev: stdDev / 1000, // seconds
-                laps: circuitLaps.length
+            if (circuitLaps.length > 0) {
+                lapsByCircuit[circuit.name] = circuitLaps.map((lap, index) => ({
+                    index: index + 1,
+                    time: lap.time / 1000,
+                    date: format(new Date(lap.date), 'dd/MM')
+                }))
             }
-        }).filter(Boolean).sort((a, b) => (a?.stdDev || 0) - (b?.stdDev || 0)).slice(0, 5) // Top 5 most consistent
-    }, [laps, circuits])
+        })
+
+        // Transform for Recharts: Array of { index: 1, CircuitA: time, CircuitB: time, ... }
+        const chartData = []
+        for (let i = 0; i < 10; i++) {
+            const dataPoint: any = { index: i + 1 }
+            Object.entries(lapsByCircuit).forEach(([circuitName, laps]) => {
+                if (laps[i]) {
+                    dataPoint[circuitName] = laps[i].time
+                    dataPoint[`${circuitName}_date`] = laps[i].date
+                }
+            })
+            chartData.push(dataPoint)
+        }
+
+        return { chartData, circuits: Object.keys(lapsByCircuit) }
+    }, [laps, circuits, sessionType])
 
     // 4. Total Stats
     const totalStats = React.useMemo(() => {
@@ -74,6 +83,21 @@ export default function AnalyticsPage() {
         const seconds = Math.floor((ms % 60000) / 1000)
         const milliseconds = Math.floor((ms % 1000) / 10)
         return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`
+    }
+
+    // Generate consistent colors for circuits
+    const getCircuitColor = (index: number) => {
+        const colors = [
+            '#ef4444', // red
+            '#3b82f6', // blue
+            '#10b981', // green
+            '#f59e0b', // amber
+            '#8b5cf6', // violet
+            '#ec4899', // pink
+            '#06b6d4', // cyan
+            '#f97316', // orange
+        ]
+        return colors[index % colors.length]
     }
 
     return (
@@ -122,43 +146,79 @@ export default function AnalyticsPage() {
             </div>
 
             <Tabs defaultValue="progression" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/10">
+                <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10">
                     <TabsTrigger value="progression" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white/70">Progreso</TabsTrigger>
                     <TabsTrigger value="best" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white/70">Récords</TabsTrigger>
-                    <TabsTrigger value="consistency" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white/70">Consistencia</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="progression" className="mt-6 space-y-4">
                     <Card className="bg-black border-white/10">
-                        <CardHeader>
-                            <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-                                <TrendingUp className="h-5 w-5 text-primary" />
-                                Últimas 20 Vueltas
-                            </CardTitle>
-                            <p className="text-xs text-white/40">Evolución de tus tiempos en las últimas sesiones.</p>
+                        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-2">
+                            <div>
+                                <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+                                    <TrendingUp className="h-5 w-5 text-primary" />
+                                    Progreso por Circuito
+                                </CardTitle>
+                                <p className="text-xs text-white/40">Últimas 10 vueltas por circuito.</p>
+                            </div>
+                            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-lg border border-white/10 w-full md:w-auto">
+                                <Button
+                                    size="sm"
+                                    variant={sessionType === 'qualifying' ? 'default' : 'ghost'}
+                                    onClick={() => setSessionType('qualifying')}
+                                    className={`flex-1 md:flex-none ${sessionType === 'qualifying' ? 'bg-primary text-black hover:bg-primary/90' : 'text-white/50 hover:text-white hover:bg-transparent'}`}
+                                >
+                                    Clasificación
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant={sessionType === 'race' ? 'default' : 'ghost'}
+                                    onClick={() => setSessionType('race')}
+                                    className={`flex-1 md:flex-none ${sessionType === 'race' ? 'bg-primary text-black hover:bg-primary/90' : 'text-white/50 hover:text-white hover:bg-transparent'}`}
+                                >
+                                    Carrera
+                                </Button>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-0 pb-4">
-                            <div className="h-[300px] w-full">
+                        <CardContent className="p-0 pb-4 pt-4">
+                            <div className="h-[500px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart data={progressionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                        <XAxis dataKey="index" stroke="#666" tick={{ fill: '#666', fontSize: 10 }} tickLine={false} axisLine={false} />
-                                        <YAxis stroke="#666" tick={{ fill: '#666', fontSize: 10 }} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
+                                    <LineChart data={progressionData.chartData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
+                                        <XAxis
+                                            dataKey="index"
+                                            stroke="#444"
+                                            tick={{ fill: '#666', fontSize: 12 }}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            dy={10}
+                                        />
+                                        <YAxis stroke="#444" tick={{ fill: '#666', fontSize: 12 }} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
                                         <Tooltip
-                                            contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                                            itemStyle={{ color: '#fff' }}
-                                            labelStyle={{ color: '#666' }}
-                                            formatter={(value: number) => [`${value.toFixed(3)}s`, 'Tiempo']}
+                                            contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+                                            itemStyle={{ color: '#fff', fontSize: '12px' }}
+                                            labelStyle={{ color: '#888', marginBottom: '8px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}
+                                            formatter={(value: number, name: string) => [`${value.toFixed(3)}s`, name]}
                                             labelFormatter={(label) => `Vuelta ${label}`}
                                         />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="time"
-                                            stroke="var(--primary)"
-                                            strokeWidth={2}
-                                            dot={{ fill: 'var(--primary)', r: 4 }}
-                                            activeDot={{ r: 6, fill: '#fff' }}
+                                        <Legend
+                                            verticalAlign="bottom"
+                                            height={36}
+                                            iconType="circle"
+                                            wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }}
                                         />
+                                        {progressionData.circuits.map((circuit, index) => (
+                                            <Line
+                                                key={circuit}
+                                                type="monotone"
+                                                dataKey={circuit}
+                                                stroke={getCircuitColor(index)}
+                                                strokeWidth={3}
+                                                dot={{ fill: getCircuitColor(index), r: 4, strokeWidth: 0 }}
+                                                activeDot={{ r: 6, fill: '#fff', stroke: getCircuitColor(index), strokeWidth: 2 }}
+                                                connectNulls
+                                            />
+                                        ))}
                                     </LineChart>
                                 </ResponsiveContainer>
                             </div>
@@ -176,50 +236,21 @@ export default function AnalyticsPage() {
                             <p className="text-xs text-white/40">Tus récords absolutos por circuito.</p>
                         </CardHeader>
                         <CardContent className="p-0 pb-4">
-                            <div className="h-[300px] w-full">
+                            <div className="h-[400px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={bestLapsData} layout="vertical" margin={{ top: 0, right: 30, left: 30, bottom: 0 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#333" horizontal={false} />
-                                        <XAxis type="number" stroke="#666" tick={{ fill: '#666', fontSize: 10 }} tickLine={false} axisLine={false} hide />
-                                        <YAxis dataKey="name" type="category" stroke="#fff" tick={{ fill: '#fff', fontSize: 11, fontWeight: 'bold' }} tickLine={false} axisLine={false} width={100} />
+                                    <BarChart data={bestLapsData} layout="vertical" margin={{ top: 0, right: 60, left: 40, bottom: 0 }}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#222" horizontal={false} />
+                                        <XAxis type="number" stroke="#444" tick={{ fill: '#666', fontSize: 12 }} tickLine={false} axisLine={false} hide />
+                                        <YAxis dataKey="name" type="category" stroke="#fff" tick={{ fill: '#fff', fontSize: 12, fontWeight: 'bold' }} tickLine={false} axisLine={false} width={120} />
                                         <Tooltip
                                             cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                            contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                                            itemStyle={{ color: '#fff' }}
+                                            contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+                                            itemStyle={{ color: '#fff', fontSize: '12px' }}
                                             formatter={(value: number) => [`${formatTime(value * 1000)}`, 'Tiempo']}
                                         />
-                                        <Bar dataKey="time" fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={30}>
+                                        <Bar dataKey="time" fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={40}>
+                                            <LabelList dataKey="displayTime" position="right" fill="#fff" fontSize={12} fontWeight="bold" />
                                         </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="consistency" className="mt-6 space-y-4">
-                    <Card className="bg-black border-white/10">
-                        <CardHeader>
-                            <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-                                <Activity className="h-5 w-5 text-primary" />
-                                Más Consistentes
-                            </CardTitle>
-                            <p className="text-xs text-white/40">Circuitos con menor desviación estándar (mayor regularidad).</p>
-                        </CardHeader>
-                        <CardContent className="p-0 pb-4">
-                            <div className="h-[300px] w-full">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={consistencyData} layout="vertical" margin={{ top: 0, right: 30, left: 30, bottom: 0 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#333" horizontal={false} />
-                                        <XAxis type="number" stroke="#666" tick={{ fill: '#666', fontSize: 10 }} tickLine={false} axisLine={false} hide />
-                                        <YAxis dataKey="name" type="category" stroke="#fff" tick={{ fill: '#fff', fontSize: 11, fontWeight: 'bold' }} tickLine={false} axisLine={false} width={100} />
-                                        <Tooltip
-                                            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                            contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                                            itemStyle={{ color: '#fff' }}
-                                            formatter={(value: number) => [`${value.toFixed(3)}s`, 'Desviación']}
-                                        />
-                                        <Bar dataKey="stdDev" fill="#10b981" radius={[0, 4, 4, 0]} barSize={30} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>

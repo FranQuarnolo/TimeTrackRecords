@@ -36,11 +36,26 @@ create table public.user_circuit_settings (
   primary key (user_id, circuit_id)
 );
 
+-- Create setups table
+create table if not exists public.setups (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users not null,
+  car_id text not null, -- Can be a UUID (for user cars) or a string ID (for default cars)
+  name text not null,
+  session_type text,
+  tires text,
+  pressure jsonb, -- Storing pressure as JSON { fl: "26.5", fr: "26.5", ... }
+  fuel text,
+  notes text,
+  created_at timestamptz default now()
+);
+
 -- Set up Row Level Security (RLS)
 alter table public.profiles enable row level security;
 alter table public.laps enable row level security;
 alter table public.user_cars enable row level security;
 alter table public.user_circuit_settings enable row level security;
+alter table public.setups enable row level security;
 
 -- Create policies
 create policy "Public profiles are viewable by everyone." on public.profiles
@@ -81,6 +96,23 @@ create policy "Users can insert their own circuit settings." on public.user_circ
 
 create policy "Users can update their own circuit settings." on public.user_circuit_settings
   for update using (auth.uid() = user_id);
+
+-- Setups policies
+create policy "Users can view their own setups"
+on public.setups for select
+using (auth.uid() = user_id);
+
+create policy "Users can insert their own setups"
+on public.setups for insert
+with check (auth.uid() = user_id);
+
+create policy "Users can update their own setups"
+on public.setups for update
+using (auth.uid() = user_id);
+
+create policy "Users can delete their own setups"
+on public.setups for delete
+using (auth.uid() = user_id);
 
 -- Function to handle new user signup
 create or replace function public.handle_new_user()

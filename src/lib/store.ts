@@ -21,6 +21,7 @@ interface AppState {
     loadUserData: () => Promise<void>;
     addSetup: (setup: Omit<Setup, 'id' | 'created_at'>) => Promise<void>;
     updateSetup: (setup: Setup) => Promise<void>;
+    deleteSetup: (id: string) => Promise<void>;
 }
 
 // Initial circuits data
@@ -344,9 +345,9 @@ export const useStore = create<AppState>()(
 
             addSetup: async (setupData) => {
                 const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
+                if (!user) throw new Error('Usuario no autenticado');
 
-                const { data } = await supabase.from('setups').insert({
+                const { data, error } = await supabase.from('setups').insert({
                     user_id: user.id,
                     car_id: setupData.carId,
                     name: setupData.name,
@@ -356,6 +357,11 @@ export const useStore = create<AppState>()(
                     fuel: setupData.fuel,
                     notes: setupData.notes
                 }).select().single();
+
+                if (error) {
+                    console.error('Error saving setup:', error);
+                    throw error;
+                }
 
                 if (data) {
                     // Map the response back to Setup type
@@ -403,6 +409,17 @@ export const useStore = create<AppState>()(
                         setups: state.setups.map(s => s.id === setup.id ? updatedSetup : s)
                     }));
                 }
+            },
+
+            deleteSetup: async (id) => {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                await supabase.from('setups').delete().eq('id', id);
+
+                set(state => ({
+                    setups: state.setups.filter(s => s.id !== id)
+                }));
             },
         }),
         {
