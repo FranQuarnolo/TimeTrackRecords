@@ -99,9 +99,20 @@ if __name__ == "__main__":
     print("="*50)
     print(f" IP Local: {ip}")
     print(f" URL WebSocket: {url}")
+    print("="*50)
+    print(" IMPORTANTE: Accede a la web app vía HTTP (no HTTPS)")
+    print(f" Ejemplo: http://{ip}:3000")
     print("="*50 + "\n")
     
     print("Escanea este código QR con tu celular o ingresa la IP:")
     print_qr(url)
     
+    # Auto-open browser
+    try:
+        import webbrowser
+        print("Abriendo navegador...")
+        webbrowser.open(f"http://localhost:3000")
+    except Exception as e:
+        print(f"No se pudo abrir el navegador automáticamente: {e}")
+
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
