@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { Setup } from "@/types"
+import { Suspense } from "react"
 
-export default function NewSetupPage() {
+function NewSetupContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const carId = searchParams.get("carId")
@@ -63,5 +64,13 @@ export default function NewSetupPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function NewSetupPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-black text-white flex items-center justify-center">Cargando...</div>}>
+            <NewSetupContent />
+        </Suspense>
     )
 }
