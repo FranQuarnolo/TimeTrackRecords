@@ -143,7 +143,7 @@ export default function LiveTimingPage() {
                                 </h2>
                                 <p className="text-white/50 text-sm">Elige donde vas a correr hoy.</p>
                             </div>
-                            <CircuitSelector onSelect={handleCircuitSelect} />
+                            <CircuitSelector onSelect={(c) => handleCircuitSelect(c)} />
                         </motion.div>
                     )}
 

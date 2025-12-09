@@ -58,7 +58,7 @@ export default function CargarTiempoPage() {
                                 exit={{ opacity: 0, x: 20 }}
                                 className="flex-1 flex flex-col"
                             >
-                                <CircuitSelector onSelect={handleCircuitSelect} />
+                                <CircuitSelector onSelect={(c) => handleCircuitSelect(c)} />
                             </motion.div>
                         )}
                         {step === 2 && selectedCircuit && (
