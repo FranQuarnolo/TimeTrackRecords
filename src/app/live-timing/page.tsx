@@ -1,6 +1,4 @@
 "use client"
-// Trigger Vercel Redeploy
-// Trigger Vercel Redeploy
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
@@ -68,6 +66,15 @@ export default function LiveTimingPage() {
 
             const ip = targetIp.replace('http://', '').replace('ws://', '').split(':')[0]
             const wsUrl = `ws://${ip}:8000/ws`
+
+            // Check for Mixed Content (HTTPS -> WS)
+            if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+                toast.error("Error de Seguridad (Mixed Content)", {
+                    description: "No se puede conectar a un servidor local (ws://) desde una página segura (https://). Por favor accede a la aplicación usando http://localhost:3000 o configura SSL en el puente.",
+                    duration: 10000,
+                })
+                return
+            }
 
             console.log(`Connecting to ${wsUrl}...`)
             const socket = new WebSocket(wsUrl)
@@ -149,9 +156,9 @@ export default function LiveTimingPage() {
             }
 
             socketRef.current = socket
-        } catch (e) {
+        } catch (e: any) {
             console.error("Connection failed", e)
-            toast.error("Error de conexión", { description: "Ocurrió un error inesperado al intentar conectar." })
+            toast.error("Error de conexión", { description: e.message || "Ocurrió un error inesperado al intentar conectar." })
         }
     }
 
@@ -391,7 +398,7 @@ export default function LiveTimingPage() {
                                                     <span className="hidden md:inline font-medium">{isConnected ? "Conectado" : "Desconectado"}</span>
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-2xl">
+                                            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-2xl max-h-[85vh] overflow-y-auto">
                                                 <DialogHeader>
                                                     <DialogTitle className="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-2">
                                                         <Monitor className="h-6 w-6 text-primary" />
@@ -460,21 +467,6 @@ export default function LiveTimingPage() {
                                                                     <QrCode className="mr-2 h-5 w-5" />
                                                                     Abrir Escáner
                                                                 </Button>
-
-                                                                <div className="w-full pt-4 border-t border-white/10">
-                                                                    <p className="text-[10px] uppercase tracking-wider text-white/30 mb-2 font-bold">O ingresa IP manual</p>
-                                                                    <div className="flex gap-2">
-                                                                        <Input
-                                                                            value={serverIp}
-                                                                            onChange={(e) => setServerIp(e.target.value)}
-                                                                            placeholder="192.168.1.X"
-                                                                            className="bg-black/50 border-white/10 font-mono text-xs h-9"
-                                                                        />
-                                                                        <Button size="sm" variant="outline" className="h-9" onClick={() => connectToBridge()}>
-                                                                            Conectar
-                                                                        </Button>
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         ) : (
                                                             <div className="flex-1 flex flex-col">
