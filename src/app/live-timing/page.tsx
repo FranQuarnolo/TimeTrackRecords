@@ -188,7 +188,7 @@ export default function LiveTimingPage() {
     }
 
     const handleStartSession = () => {
-        if (selectedCarName && selectedSetupId) {
+        if (selectedCarName) {
             setStep(3)
         }
     }
@@ -294,7 +294,7 @@ export default function LiveTimingPage() {
                                 <Button
                                     size="lg"
                                     className="w-full max-w-md h-14 text-lg font-black uppercase tracking-widest shadow-[0_0_30px_rgba(34,197,94,0.3)]"
-                                    disabled={!selectedCarName || !selectedSetupId}
+                                    disabled={!selectedCarName}
                                     onClick={handleStartSession}
                                 >
                                     Iniciar Sesión
