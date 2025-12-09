@@ -414,7 +414,7 @@ export default function LiveTimingPage() {
                                                                 }}
                                                                 onError={(error) => console.error(error)}
                                                                 components={{
-                                                                    audio: false,
+
                                                                     onOff: false,
                                                                     torch: false,
                                                                     zoom: false,
