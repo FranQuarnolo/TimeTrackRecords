@@ -45,3 +45,23 @@
 ## ⚙️ Configuración
 
 Accede al menú de configuración a través del icono de engranaje en la esquina superior derecha para cambiar entre temas Claro/Oscuro y seleccionar tu Escudería favorita.
+
+## 📡 Live Timing (Assetto Corsa)
+
+Para usar la función de Live Timing en tiempo real con Assetto Corsa:
+
+1.  **Descargar el Conector**:
+    -   Ve a la página "Live Timing" en la app.
+    -   Haz clic en el botón de estado "Desconectado" (o icono Wifi).
+    -   Selecciona "Descargar AC_Bridge.exe".
+
+2.  **Ejecutar el Conector**:
+    -   Ejecuta el archivo `AC_Bridge.exe` en tu PC (donde corre el juego).
+    -   Se abrirá una terminal mostrando un código QR y tu IP local.
+
+3.  **Conectar**:
+    -   En la app, ingresa la IP mostrada (o escanea el QR si está disponible).
+    -   Haz clic en "Conectar".
+    -   ¡Empieza a conducir! Los datos se verán en tiempo real en tu dispositivo.
+
+**Nota**: Asegúrate de que tu PC y tu dispositivo móvil estén conectados a la misma red Wi-Fi.
