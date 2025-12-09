@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TeamThemeProvider } from "@/components/team-theme-provider";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { ThemeDrawer } from "@/components/theme-drawer";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({
               <div className="fixed bottom-4 left-4 z-50">
                 <ThemeDrawer />
               </div>
+              <Toaster />
             </AuthProvider>
           </TeamThemeProvider>
         </ThemeProvider>

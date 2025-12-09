@@ -4,7 +4,8 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Play, Pause, RotateCcw, Flag, Timer, Save, ChevronLeft, ArrowRight, Smartphone, Wifi, WifiOff, Download, Monitor, QrCode, X } from "lucide-react"
+import { Play, Pause, RotateCcw, Flag, Timer, Save, ChevronLeft, ArrowRight, Smartphone, Wifi, WifiOff, Download, Monitor, QrCode, X, AlertCircle, CheckCircle2, HelpCircle } from "lucide-react"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { useStore } from "@/lib/store"
 import { CarSelector } from "@/components/times/car-selector"
@@ -60,17 +61,41 @@ export default function LiveTimingPage() {
         try {
             // Clean IP
             const targetIp = ipOverride || serverIp
+            if (!targetIp) {
+                toast.error("IP inválida", { description: "Por favor ingresa una IP válida." })
+                return
+            }
+
             const ip = targetIp.replace('http://', '').replace('ws://', '').split(':')[0]
             const wsUrl = `ws://${ip}:8000/ws`
 
             console.log(`Connecting to ${wsUrl}...`)
             const socket = new WebSocket(wsUrl)
 
+            // Track if we ever established connection to differentiate between
+            // "failed to connect" and "disconnected after success"
+            let connectionEstablished = false
+
+            // Connection timeout
+            const timeoutId = setTimeout(() => {
+                if (socket.readyState !== WebSocket.OPEN) {
+                    socket.close()
+                    toast.error("Tiempo de espera agotado", {
+                        description: "No se pudo conectar al puente. Verifica que esté corriendo y que la IP sea correcta."
+                    })
+                }
+            }, 5000)
+
             socket.onopen = () => {
+                clearTimeout(timeoutId)
+                connectionEstablished = true
                 console.log("Connected to AC Bridge")
                 setIsConnected(true)
                 setShowConnectionDialog(false)
                 setServerIp(ip) // Update state if connected via override
+                toast.success("Conectado a Assetto Corsa", {
+                    description: "Datos de telemetría en tiempo real activos."
+                })
             }
 
             socket.onmessage = (event) => {
@@ -100,19 +125,33 @@ export default function LiveTimingPage() {
             }
 
             socket.onclose = () => {
+                clearTimeout(timeoutId)
                 console.log("Disconnected from AC Bridge")
                 setIsConnected(false)
                 setIsRunning(false)
+
+                // If we never connected, it was a connection failure
+                if (!connectionEstablished) {
+                    toast.error("No se pudo conectar", {
+                        description: "Verifica que el puente esté corriendo y la IP sea correcta. Revisa el Firewall."
+                    })
+                } else {
+                    // If we were connected and lost it
+                    toast("Desconectado del puente", {
+                        description: "Se perdió la conexión con Assetto Corsa."
+                    })
+                }
             }
 
             socket.onerror = (error) => {
+                // Just log it, onclose will handle the UI feedback
                 console.error("WebSocket Error", error)
-                setIsConnected(false)
             }
 
             socketRef.current = socket
         } catch (e) {
             console.error("Connection failed", e)
+            toast.error("Error de conexión", { description: "Ocurrió un error inesperado al intentar conectar." })
         }
     }
 
@@ -191,6 +230,9 @@ export default function LiveTimingPage() {
     const handleStartSession = () => {
         if (selectedCarName) {
             setStep(3)
+            if (!isConnected) {
+                setShowConnectionDialog(true)
+            }
         }
     }
 
@@ -339,103 +381,152 @@ export default function LiveTimingPage() {
                                                     variant="outline"
                                                     size="sm"
                                                     className={cn(
-                                                        "gap-2 border-white/10 bg-white/5 backdrop-blur-md",
-                                                        isConnected ? "text-green-500 border-green-500/50" : "text-white/50"
+                                                        "gap-2 border-white/10 bg-white/5 backdrop-blur-md transition-all",
+                                                        isConnected
+                                                            ? "text-green-500 border-green-500/50 hover:bg-green-500/10"
+                                                            : "text-white/50 hover:text-white hover:bg-white/10 animate-pulse"
                                                     )}
                                                 >
                                                     {isConnected ? <Wifi className="h-4 w-4" /> : <WifiOff className="h-4 w-4" />}
-                                                    <span className="hidden md:inline">{isConnected ? "Conectado" : "Desconectado"}</span>
+                                                    <span className="hidden md:inline font-medium">{isConnected ? "Conectado" : "Desconectado"}</span>
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent className="bg-zinc-900 border-white/10 text-white">
+                                            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-2xl">
                                                 <DialogHeader>
-                                                    <DialogTitle>Conectar con Assetto Corsa</DialogTitle>
+                                                    <DialogTitle className="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-2">
+                                                        <Monitor className="h-6 w-6 text-primary" />
+                                                        Conectar con Assetto Corsa
+                                                    </DialogTitle>
                                                     <DialogDescription className="text-white/50">
-                                                        Para ver datos en tiempo real, necesitas ejecutar el conector en tu PC.
+                                                        Sigue estos pasos para sincronizar la telemetría en tiempo real.
                                                     </DialogDescription>
                                                 </DialogHeader>
 
-                                                {!showScanner ? (
-                                                    <div className="space-y-6 py-4">
-                                                        {/* Step 1: Download */}
-                                                        <div className="space-y-2">
-                                                            <div className="flex items-center gap-2 text-sm font-bold text-white/70">
-                                                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-xs">1</span>
-                                                                Descargar Conector
-                                                            </div>
-                                                            <Button className="w-full gap-2" variant="secondary" asChild>
+                                                <div className="grid md:grid-cols-2 gap-8 py-4">
+                                                    {/* Left Column: Instructions */}
+                                                    <div className="space-y-8">
+                                                        {/* Step 1 */}
+                                                        <div className="relative pl-8">
+                                                            <div className="absolute left-0 top-0 flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold border border-primary/50">1</div>
+                                                            <h4 className="font-bold text-white mb-1">Abrir Assetto Corsa</h4>
+                                                            <p className="text-sm text-white/50">
+                                                                Inicia una sesión de <strong>Práctica</strong> o <strong>Hotlap</strong> en el juego. El auto debe estar en pista (no en boxes).
+                                                            </p>
+                                                        </div>
+
+                                                        {/* Step 2 */}
+                                                        <div className="relative pl-8">
+                                                            <div className="absolute left-0 top-0 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/70 text-xs font-bold border border-white/20">2</div>
+                                                            <h4 className="font-bold text-white mb-1">Ejecutar Puente</h4>
+                                                            <p className="text-sm text-white/50 mb-3">
+                                                                Descarga y abre el archivo <code>AC_Bridge.exe</code> en tu PC.
+                                                            </p>
+                                                            <Button size="sm" variant="secondary" className="w-full gap-2 h-8 text-xs" asChild>
                                                                 <a href="/downloads/AC_Bridge.exe" download>
-                                                                    <Download className="h-4 w-4" />
+                                                                    <Download className="h-3 w-3" />
                                                                     Descargar AC_Bridge.exe
                                                                 </a>
                                                             </Button>
                                                         </div>
 
-                                                        {/* Step 2: Run */}
-                                                        <div className="space-y-2">
-                                                            <div className="flex items-center gap-2 text-sm font-bold text-white/70">
-                                                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-xs">2</span>
-                                                                Ejecutar en PC
-                                                            </div>
-                                                            <p className="text-xs text-white/40 pl-8">
-                                                                Abre el archivo descargado. Verás una ventana negra con un código QR y una IP.
+                                                        {/* Step 3 */}
+                                                        <div className="relative pl-8">
+                                                            <div className="absolute left-0 top-0 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/70 text-xs font-bold border border-white/20">3</div>
+                                                            <h4 className="font-bold text-white mb-1">Escanear QR</h4>
+                                                            <p className="text-sm text-white/50">
+                                                                Escanea el código QR que aparece en la ventana negra del puente.
                                                             </p>
                                                         </div>
+                                                    </div>
 
-                                                        {/* Step 3: Connect */}
-                                                        <div className="space-y-2">
-                                                            <div className="flex items-center gap-2 text-sm font-bold text-white/70">
-                                                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-xs">3</span>
-                                                                Ingresar IP
-                                                            </div>
-                                                            <div className="flex gap-2 pl-8">
-                                                                <Input
-                                                                    value={serverIp}
-                                                                    onChange={(e) => setServerIp(e.target.value)}
-                                                                    placeholder="192.168.1.X"
-                                                                    className="bg-black/50 border-white/10 font-mono"
-                                                                />
-                                                                <Button size="icon" variant="outline" onClick={() => setShowScanner(true)}>
-                                                                    <QrCode className="h-4 w-4" />
+                                                    {/* Right Column: Action */}
+                                                    <div className="flex flex-col gap-4 bg-white/5 rounded-xl p-4 border border-white/10">
+                                                        {!showScanner ? (
+                                                            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
+                                                                <div className="h-16 w-16 rounded-full bg-white/5 flex items-center justify-center mb-2">
+                                                                    <QrCode className="h-8 w-8 text-white/50" />
+                                                                </div>
+                                                                <div>
+                                                                    <h3 className="font-bold text-lg">Escanear Código QR</h3>
+                                                                    <p className="text-xs text-white/40 max-w-[200px] mx-auto">
+                                                                        Apunta tu cámara al código QR en la pantalla de tu PC.
+                                                                    </p>
+                                                                </div>
+                                                                <Button
+                                                                    size="lg"
+                                                                    className="w-full font-bold shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                                                    onClick={() => setShowScanner(true)}
+                                                                >
+                                                                    <QrCode className="mr-2 h-5 w-5" />
+                                                                    Abrir Escáner
                                                                 </Button>
-                                                                <Button onClick={() => connectToBridge()}>
-                                                                    Conectar
-                                                                </Button>
+
+                                                                <div className="w-full pt-4 border-t border-white/10">
+                                                                    <p className="text-[10px] uppercase tracking-wider text-white/30 mb-2 font-bold">O ingresa IP manual</p>
+                                                                    <div className="flex gap-2">
+                                                                        <Input
+                                                                            value={serverIp}
+                                                                            onChange={(e) => setServerIp(e.target.value)}
+                                                                            placeholder="192.168.1.X"
+                                                                            className="bg-black/50 border-white/10 font-mono text-xs h-9"
+                                                                        />
+                                                                        <Button size="sm" variant="outline" className="h-9" onClick={() => connectToBridge()}>
+                                                                            Conectar
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        ) : (
+                                                            <div className="flex-1 flex flex-col">
+                                                                <div className="relative flex-1 bg-black rounded-lg overflow-hidden border border-white/10 min-h-[250px]">
+                                                                    <Scanner
+                                                                        onScan={(result) => {
+                                                                            if (result && result.length > 0) {
+                                                                                handleScan(result[0].rawValue)
+                                                                            }
+                                                                        }}
+                                                                        onError={(error) => console.error(error)}
+                                                                        components={{
+                                                                            onOff: false,
+                                                                            torch: false,
+                                                                            zoom: false,
+                                                                            finder: false,
+                                                                        }}
+                                                                        styles={{
+                                                                            container: { width: '100%', height: '100%' },
+                                                                            video: { width: '100%', height: '100%', objectFit: 'cover' }
+                                                                        }}
+                                                                    />
+                                                                    <div className="absolute inset-0 border-2 border-primary/50 m-8 rounded-lg pointer-events-none animate-pulse" />
+                                                                    <Button
+                                                                        size="icon"
+                                                                        variant="ghost"
+                                                                        className="absolute top-2 right-2 h-8 w-8 bg-black/50 text-white hover:bg-black/80"
+                                                                        onClick={() => setShowScanner(false)}
+                                                                    >
+                                                                        <X className="h-4 w-4" />
+                                                                    </Button>
+                                                                </div>
+                                                                <p className="text-center text-xs text-white/40 mt-2">
+                                                                    Buscando código QR...
+                                                                </p>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                ) : (
-                                                    <div className="py-4 space-y-4">
-                                                        <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-white/10 bg-black">
-                                                            <Scanner
-                                                                onScan={(result) => {
-                                                                    if (result && result.length > 0) {
-                                                                        handleScan(result[0].rawValue)
-                                                                    }
-                                                                }}
-                                                                onError={(error) => console.error(error)}
-                                                                components={{
-                                                                    onOff: false,
-                                                                    torch: false,
-                                                                    zoom: false,
-                                                                    finder: false,
-                                                                }}
-                                                                styles={{
-                                                                    container: { width: '100%', height: '100%' },
-                                                                    video: { width: '100%', height: '100%', objectFit: 'cover' }
-                                                                }}
-                                                            />
-                                                            <div className="absolute inset-0 border-2 border-primary/50 m-12 rounded-lg pointer-events-none animate-pulse" />
-                                                        </div>
-                                                        <Button
-                                                            variant="ghost"
-                                                            className="w-full"
-                                                            onClick={() => setShowScanner(false)}
-                                                        >
-                                                            Cancelar
-                                                        </Button>
+                                                </div>
+
+                                                {/* Troubleshooting Footer */}
+                                                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 flex gap-3 items-start">
+                                                    <AlertCircle className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
+                                                    <div className="space-y-1">
+                                                        <h5 className="text-xs font-bold text-yellow-500 uppercase tracking-wide">¿Problemas de conexión?</h5>
+                                                        <ul className="text-[10px] text-yellow-500/80 list-disc pl-3 space-y-0.5">
+                                                            <li>Asegúrate que tu celular y PC estén en la <strong>misma red Wi-Fi</strong>.</li>
+                                                            <li>Verifica que el Firewall de Windows no esté bloqueando <code>python</code> o el puerto <code>8000</code>.</li>
+                                                            <li>Si usas VPN, desactívala temporalmente.</li>
+                                                        </ul>
                                                     </div>
-                                                )}
+                                                </div>
                                             </DialogContent>
                                         </Dialog>
 
