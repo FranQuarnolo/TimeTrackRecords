@@ -84,5 +84,5 @@ Si deseas modificar el script de conexión (`scripts/ac_bridge.py`):
 3.  **Compilar Ejecutable (.exe)**:
     Para generar un nuevo `AC_Bridge.exe` en la carpeta `public/downloads`:
     ```bash
-    pyinstaller --onefile --name AC_Bridge --distpath ../public/downloads ac_bridge.py
+    pyinstaller --onefile --name AC_Bridge --icon=../src/app/favicon.ico --distpath ../public/downloads ac_bridge.py
     ```
