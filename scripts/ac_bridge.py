@@ -101,7 +101,7 @@ if __name__ == "__main__":
     print(f" URL WebSocket: {url}")
     print("="*50 + "\n")
     
-    print("Escanea este código QR con tu celular (si la app lo soporta) o ingresa la IP:")
+    print("Escanea este código QR con tu celular o ingresa la IP:")
     print_qr(url)
     
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")

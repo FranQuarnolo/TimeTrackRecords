@@ -60,8 +60,29 @@ Para usar la función de Live Timing en tiempo real con Assetto Corsa:
     -   Se abrirá una terminal mostrando un código QR y tu IP local.
 
 3.  **Conectar**:
-    -   En la app, ingresa la IP mostrada (o escanea el QR si está disponible).
+    -   En la app, ingresa la IP mostrada 
     -   Haz clic en "Conectar".
     -   ¡Empieza a conducir! Los datos se verán en tiempo real en tu dispositivo.
 
 **Nota**: Asegúrate de que tu PC y tu dispositivo móvil estén conectados a la misma red Wi-Fi.
+
+## 💻 Desarrollo (AC Bridge)
+
+Si deseas modificar el script de conexión (`scripts/ac_bridge.py`):
+
+1.  **Instalar Dependencias**:
+    ```bash
+    cd scripts
+    pip install -r requirements.txt
+    ```
+
+2.  **Ejecutar Script**:
+    ```bash
+    python ac_bridge.py
+    ```
+
+3.  **Compilar Ejecutable (.exe)**:
+    Para generar un nuevo `AC_Bridge.exe` en la carpeta `public/downloads`:
+    ```bash
+    pyinstaller --onefile --name AC_Bridge --distpath ../public/downloads ac_bridge.py
+    ```
