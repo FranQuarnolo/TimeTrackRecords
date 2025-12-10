@@ -38,7 +38,7 @@ export function FeatureCard({
                     borderHoverColor
                 )}
             >
-                <Link href={href} className="flex items-center justify-between px-6">
+                <Link href={href} className="flex items-center !justify-between px-6 w-full">
                     {children}
                 </Link>
             </Button>
