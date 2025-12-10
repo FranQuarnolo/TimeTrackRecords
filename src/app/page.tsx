@@ -6,6 +6,7 @@ import { Timer, PlusCircle, ChevronRight } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { motion } from "framer-motion";
 import { BackgroundAnimation } from "@/components/ui/background-animation";
+import { FeatureCard } from "@/components/dashboard/feature-card";
 
 export default function Home() {
   return (
@@ -25,89 +26,77 @@ export default function Home() {
             className="w-full max-w-md space-y-4"
           >
             {/* Mis Tiempos (Main) */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
-              <Button
-                asChild
-                className="relative w-full h-32 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 overflow-hidden group"
-              >
-                <Link href="/mis-tiempos" className="flex items-center justify-between px-8">
-                  <div className="flex flex-col items-start gap-2">
-                    <span className="text-xs font-mono text-primary tracking-widest uppercase">Sistema de Telemetría</span>
-                    <span className="text-3xl font-bold italic tracking-tighter text-white group-hover:text-primary-foreground transition-colors">
-                      MIS TIEMPOS
-                    </span>
-                    <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                      <Timer className="h-4 w-4" />
-                      <span>Ver mis tiempos</span>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-8 w-8 text-zinc-500 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </Link>
-              </Button>
-            </div>
+            <FeatureCard
+              href="/mis-tiempos"
+              gradient="bg-gradient-to-r from-primary to-primary/50"
+              borderHoverColor="hover:border-primary/50"
+              height="h-32"
+              glowOpacity="opacity-25 group-hover:opacity-75"
+            >
+              <div className="flex flex-col items-start gap-2">
+                <span className="text-xs font-mono text-primary tracking-widest uppercase">Sistema de Telemetría</span>
+                <span className="text-3xl font-bold italic tracking-tighter text-white group-hover:text-primary-foreground transition-colors">
+                  MIS TIEMPOS
+                </span>
+                <div className="flex items-center gap-2 text-zinc-400 text-sm">
+                  <Timer className="h-4 w-4" />
+                  <span>Ver mis tiempos</span>
+                </div>
+              </div>
+              <ChevronRight className="h-8 w-8 text-zinc-500 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+            </FeatureCard>
 
             {/* Grid for new features */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Analytics */}
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-10 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
-                <Button
-                  asChild
-                  className="relative w-full h-28 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-white/5 hover:border-blue-500/50 transition-all duration-300 overflow-hidden group"
-                >
-                  <Link href="/analytics" className="flex items-center justify-between px-6">
-                    <div className="flex flex-col items-start gap-1">
-                      <span className="text-[10px] font-mono text-blue-400 tracking-widest uppercase">Estadísticas</span>
-                      <span className="text-2xl font-bold italic tracking-tighter text-white group-hover:text-blue-400 transition-colors">
-                        ANALYTICS
-                      </span>
-                    </div>
-                    <span className="text-3xl group-hover:scale-110 transition-transform duration-300">📊</span>
-                  </Link>
-                </Button>
-              </div>
+              <FeatureCard
+                href="/analytics"
+                gradient="bg-gradient-to-r from-blue-500 to-cyan-500"
+                borderHoverColor="hover:border-blue-500/50"
+              >
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-[10px] font-mono text-blue-400 tracking-widest uppercase">Estadísticas</span>
+                  <span className="text-2xl font-bold italic tracking-tighter text-white group-hover:text-blue-400 transition-colors">
+                    ANALYTICS
+                  </span>
+                </div>
+                <span className="text-3xl group-hover:scale-110 transition-transform duration-300">📊</span>
+              </FeatureCard>
 
               {/* Setups */}
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-10 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
-                <Button
-                  asChild
-                  className="relative w-full h-28 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-white/5 hover:border-orange-500/50 transition-all duration-300 overflow-hidden group"
-                >
-                  <Link href="/setups" className="flex items-center justify-between px-6">
-                    <div className="flex flex-col items-start gap-1">
-                      <span className="text-[10px] font-mono text-orange-400 tracking-widest uppercase">Taller</span>
-                      <span className="text-2xl font-bold italic tracking-tighter text-white group-hover:text-orange-400 transition-colors">
-                        SETUPS
-                      </span>
-                    </div>
-                    <span className="text-3xl group-hover:scale-110 transition-transform duration-300">🔧</span>
-                  </Link>
-                </Button>
-              </div>
+              <FeatureCard
+                href="/setups"
+                gradient="bg-gradient-to-r from-orange-500 to-amber-500"
+                borderHoverColor="hover:border-orange-500/50"
+              >
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-[10px] font-mono text-orange-400 tracking-widest uppercase">Taller</span>
+                  <span className="text-2xl font-bold italic tracking-tighter text-white group-hover:text-orange-400 transition-colors">
+                    SETUPS
+                  </span>
+                </div>
+                <span className="text-3xl group-hover:scale-110 transition-transform duration-300">🔧</span>
+              </FeatureCard>
 
               {/* Live Timing (Full Width) */}
-              <div className="relative group md:col-span-2">
-                <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl blur opacity-10 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
-                <Button
-                  asChild
-                  className="relative w-full h-24 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-white/5 hover:border-green-500/50 transition-all duration-300 overflow-hidden group"
-                >
-                  <Link href="/live-timing" className="flex items-center justify-between px-8">
-                    <div className="flex items-center gap-4">
-                      <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">⏱️</span>
-                      <div className="flex flex-col items-start gap-1">
-                        <span className="text-[10px] font-mono text-green-400 tracking-widest uppercase">En Pista</span>
-                        <span className="text-2xl font-bold italic tracking-tighter text-white group-hover:text-green-400 transition-colors">
-                          LIVE TIMING
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-6 w-6 text-zinc-500 group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
-                  </Link>
-                </Button>
-              </div>
+              <FeatureCard
+                href="/live-timing"
+                gradient="bg-gradient-to-r from-green-500 to-emerald-500"
+                borderHoverColor="hover:border-green-500/50"
+                height="h-24"
+                className="md:col-span-2"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">⏱️</span>
+                  <div className="flex flex-col items-start gap-1">
+                    <span className="text-[10px] font-mono text-green-400 tracking-widest uppercase">En Pista</span>
+                    <span className="text-2xl font-bold italic tracking-tighter text-white group-hover:text-green-400 transition-colors">
+                      LIVE TIMING
+                    </span>
+                  </div>
+                </div>
+                <ChevronRight className="h-6 w-6 text-zinc-500 group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
+              </FeatureCard>
             </div>
           </motion.div>
 

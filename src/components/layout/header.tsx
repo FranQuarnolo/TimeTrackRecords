@@ -2,6 +2,7 @@
 
 import { Flag, ChevronLeft, Timer } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/auth-provider";
 import { User, LogOut, UserCog } from "lucide-react";
@@ -43,10 +44,12 @@ export function Header() {
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0 overflow-hidden border border-primary/30 hover:border-primary transition-colors">
                                         {user.user_metadata?.avatar_url ? (
-                                            <img
+                                            <Image
                                                 src={user.user_metadata.avatar_url}
                                                 alt="Avatar"
-                                                className="h-full w-full object-cover"
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
                                             />
                                         ) : (
                                             <div className="h-full w-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">

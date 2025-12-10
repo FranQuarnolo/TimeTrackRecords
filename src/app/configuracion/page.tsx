@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -44,7 +45,7 @@ export default function SettingsPage() {
                     .single()
 
                 if (data) {
-                    setUsername(data.username || user.user_metadata?.username || "")
+                    setUsername((data as any).username || user.user_metadata?.username || "")
                 }
             }
             fetchProfile()
@@ -77,11 +78,13 @@ export default function SettingsPage() {
                     if (error) throw error
                 }
 
+                if (!user) throw new Error("No user found");
+
                 // Update Username in profiles
                 const { error: profileError } = await supabase
                     .from('profiles')
-                    .update({ username })
-                    .eq('id', user?.id)
+                    .update({ username } as any)
+                    .eq('id', user.id)
 
                 if (profileError) throw profileError
 
@@ -179,10 +182,12 @@ export default function SettingsPage() {
                     updates.password = password
                 }
                 // Username (in profiles table)
+                if (!user) throw new Error("No user found");
+
                 const { error: profileError } = await supabase
                     .from('profiles')
-                    .update({ username })
-                    .eq('id', user?.id)
+                    .update({ username } as any)
+                    .eq('id', user.id)
 
                 if (profileError) throw profileError
 
@@ -250,7 +255,7 @@ export default function SettingsPage() {
                             <div className="relative group">
                                 <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-primary/50 bg-white/5 flex items-center justify-center">
                                     {avatarUrl ? (
-                                        <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                                        <Image src={avatarUrl} alt="Avatar" fill className="object-cover" unoptimized />
                                     ) : (
                                         <UserIcon className="h-12 w-12 text-white/20" />
                                     )}
