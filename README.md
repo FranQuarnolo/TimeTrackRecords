@@ -19,6 +19,8 @@
 -   **🎨 Temas de Escuderías**: Personaliza la app con los colores de tu equipo favorito (Ferrari, Mercedes, McLaren, etc.). ¡Toda la interfaz se adapta al color de tu equipo!
 -   **📱 Mobile First**: Optimizada para interacciones táctiles y pantallas de móviles.
 -   **☁️ Base de Datos**: Sincronización en la nube con Supabase.
+-   **📊 Analytics**: Visualiza estadísticas detalladas de tu rendimiento.
+-   **⚡ Performance**: Carga rápida y optimizada con imágenes de última generación.
 
 ## 🛠️ Tecnologías
 
