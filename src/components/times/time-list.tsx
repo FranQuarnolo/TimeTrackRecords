@@ -82,10 +82,13 @@ export function TimeList({ type }: TimeListProps) {
         .sort((a, b) => a.circuit.name.localeCompare(b.circuit.name)); // Sort alphabetically by circuit name
 
     const toggleCircuit = (circuitId: string) => {
-        setExpandedCircuits(prev => ({
-            ...prev,
-            [circuitId]: !prev[circuitId]
-        }));
+        setExpandedCircuits(prev => {
+            const isCurrentlyExpanded = prev[circuitId] ?? true;
+            return {
+                ...prev,
+                [circuitId]: !isCurrentlyExpanded
+            };
+        });
     };
 
     if (lapsByCircuit.length === 0) {
