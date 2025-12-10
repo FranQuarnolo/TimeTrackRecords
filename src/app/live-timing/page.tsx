@@ -70,8 +70,14 @@ export default function LiveTimingPage() {
             // Check for Mixed Content (HTTPS -> WS)
             if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
                 toast.error("Error de Seguridad (Mixed Content)", {
-                    description: "No se puede conectar a un servidor local (ws://) desde una página segura (https://). Por favor accede a la aplicación usando http://localhost:3000 o configura SSL en el puente.",
-                    duration: 10000,
+                    description: "No se puede conectar al puente desde HTTPS. Cambia a HTTP.",
+                    duration: Infinity, // Keep it open until they click
+                    action: {
+                        label: "Cambiar a HTTP",
+                        onClick: () => {
+                            window.location.href = window.location.href.replace("https://", "http://")
+                        }
+                    }
                 })
                 return
             }

@@ -29,7 +29,7 @@ export default function Home() {
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
               <Button
                 asChild
-                className="relative w-full h-32 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 overflow-hidden group"
+                className="relative w-full h-32 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 overflow-hidden group"
               >
                 <Link href="/mis-tiempos" className="flex items-center justify-between px-8">
                   <div className="flex flex-col items-start gap-2">
@@ -54,7 +54,7 @@ export default function Home() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-10 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
                 <Button
                   asChild
-                  className="relative w-full h-28 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-white/5 hover:border-blue-500/50 transition-all duration-300 overflow-hidden group"
+                  className="relative w-full h-28 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-white/5 hover:border-blue-500/50 transition-all duration-300 overflow-hidden group"
                 >
                   <Link href="/analytics" className="flex items-center justify-between px-6">
                     <div className="flex flex-col items-start gap-1">
@@ -73,7 +73,7 @@ export default function Home() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-10 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
                 <Button
                   asChild
-                  className="relative w-full h-28 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-white/5 hover:border-orange-500/50 transition-all duration-300 overflow-hidden group"
+                  className="relative w-full h-28 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-white/5 hover:border-orange-500/50 transition-all duration-300 overflow-hidden group"
                 >
                   <Link href="/setups" className="flex items-center justify-between px-6">
                     <div className="flex flex-col items-start gap-1">
@@ -92,7 +92,7 @@ export default function Home() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl blur opacity-10 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
                 <Button
                   asChild
-                  className="relative w-full h-24 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-white/5 hover:border-green-500/50 transition-all duration-300 overflow-hidden group"
+                  className="relative w-full h-24 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-white/5 hover:border-green-500/50 transition-all duration-300 overflow-hidden group"
                 >
                   <Link href="/live-timing" className="flex items-center justify-between px-8">
                     <div className="flex items-center gap-4">
