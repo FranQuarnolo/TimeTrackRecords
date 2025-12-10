@@ -5,12 +5,13 @@ import { Circuit, SessionType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Car as CarIcon, Save } from "lucide-react";
 import { CarSelector } from "./car-selector";
+import { SetupSelector } from "./setup-selector";
 import { motion } from "framer-motion";
 
 interface TimeInputProps {
     circuit: Circuit;
     type: SessionType;
-    onSubmit: (time: number, carModel?: string) => void;
+    onSubmit: (time: number, carModel?: string, setupId?: string) => void;
     onBack: () => void;
 }
 
@@ -19,13 +20,14 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
     const [seconds, setSeconds] = useState(30);
     const [milliseconds, setMilliseconds] = useState(0);
     const [selectedCar, setSelectedCar] = useState("");
+    const [selectedSetup, setSelectedSetup] = useState<string | undefined>(undefined);
 
     const totalMs = (minutes * 60 * 1000) + (seconds * 1000) + milliseconds;
     const isValid = totalMs > 0 && selectedCar !== "";
 
     const handleSubmit = () => {
         if (!isValid) return;
-        onSubmit(totalMs, selectedCar || undefined);
+        onSubmit(totalMs, selectedCar || undefined, selectedSetup);
     };
 
     return (
@@ -73,7 +75,15 @@ export function TimeInput({ circuit, type, onSubmit, onBack }: TimeInputProps) {
                         <CarIcon className="h-4 w-4" />
                         Vehículo
                     </label>
-                    <CarSelector value={selectedCar} onSelect={setSelectedCar} />
+                    <CarSelector value={selectedCar} onSelect={(car) => {
+                        setSelectedCar(car);
+                        setSelectedSetup(undefined);
+                    }} />
+                    <SetupSelector
+                        carName={selectedCar}
+                        value={selectedSetup}
+                        onSelect={setSelectedSetup}
+                    />
                 </div>
             </div>
 

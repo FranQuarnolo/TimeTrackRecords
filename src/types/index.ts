@@ -8,6 +8,7 @@ export interface LapTime {
   date: string; // ISO string
   type: SessionType;
   carModel?: string;
+  setupId?: string;
 }
 
 export interface Circuit {

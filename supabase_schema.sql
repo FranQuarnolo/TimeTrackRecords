@@ -15,6 +15,7 @@ create table public.laps (
   car_id text not null,
   time numeric not null,
   type text not null, -- 'qualifying' or 'race'
+  setup_id uuid references public.setups(id),
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 

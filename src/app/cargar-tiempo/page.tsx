@@ -28,7 +28,7 @@ export default function CargarTiempoPage() {
         setStep(3);
     };
 
-    const handleTimeSubmit = (time: number, carModel?: string) => {
+    const handleTimeSubmit = (time: number, carModel?: string, setupId?: string) => {
         if (selectedCircuit && sessionType) {
             addLap({
                 id: crypto.randomUUID(),
@@ -37,6 +37,7 @@ export default function CargarTiempoPage() {
                 date: new Date().toISOString(),
                 type: sessionType,
                 carModel,
+                setupId,
             });
             router.push('/mis-tiempos');
         }

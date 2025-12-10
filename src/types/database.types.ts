@@ -17,6 +17,7 @@ export interface Database {
                     car_id: string
                     time: number
                     type: 'qualifying' | 'race'
+                    setup_id: string | null
                     created_at: string
                 }
                 Insert: {
@@ -26,6 +27,7 @@ export interface Database {
                     car_id: string
                     time: number
                     type: 'qualifying' | 'race'
+                    setup_id?: string | null
                     created_at?: string
                 }
                 Update: {
@@ -35,6 +37,7 @@ export interface Database {
                     car_id?: string
                     time?: number
                     type?: 'qualifying' | 'race'
+                    setup_id?: string | null
                     created_at?: string
                 }
             }

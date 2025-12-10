@@ -35,7 +35,8 @@ export const createLapsSlice: StateCreator<LapsSlice> = (set, get) => ({
                 car_id: lap.carModel || 'unknown',
                 time: lap.time,
                 type: lap.type,
-                created_at: lap.date
+                created_at: lap.date,
+                setup_id: lap.setupId
             });
         }
     },
