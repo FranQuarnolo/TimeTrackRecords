@@ -48,6 +48,8 @@ function useLongPress(callback: () => void, ms = 500) {
     };
 }
 
+import { Header } from "@/components/layout/header"
+
 export default function SetupsPage() {
     const { cars, setups, loadUserData, deleteSetup } = useStore()
     const [selectedCarName, setSelectedCarName] = React.useState<string>("")
@@ -71,24 +73,14 @@ export default function SetupsPage() {
 
     return (
         <div className="min-h-screen bg-black text-white pb-24">
+            <Header />
             <div className="p-6 space-y-6">
-                <header className="space-y-4">
-                    <Button variant="ghost" size="sm" asChild className="pl-0 text-primary hover:text-primary/80 hover:bg-transparent">
-                        <Link href="/">
-                            <ChevronLeft className="h-4 w-4 mr-1" />
-                            Volver al menú
-                        </Link>
-                    </Button>
-                    <div>
-                        <h1 className="text-3xl font-black italic uppercase tracking-tighter flex items-center gap-3">
-                            <span className="text-primary">///</span>
-                            Setups
-                        </h1>
-                        <p className="text-white/50 text-sm font-light">
-                            Gestiona las configuraciones técnicas de tus vehículos.
-                        </p>
-                    </div>
-                </header>
+                <div>
+                    <h1 className="text-3xl font-bold italic tracking-tighter uppercase">Setups</h1>
+                    <p className="text-white/50 text-sm font-light mt-2">
+                        Gestiona las configuraciones técnicas de tus vehículos.
+                    </p>
+                </div>
 
                 <div className="space-y-4">
                     <label className="text-xs font-bold text-white/50 uppercase tracking-wider pl-1">
