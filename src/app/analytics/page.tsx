@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { formatTime } from "@/lib/utils"
 
 export default function AnalyticsPage() {
     const { laps, circuits } = useStore()
@@ -78,12 +79,6 @@ export default function AnalyticsPage() {
         return { totalLaps, uniqueCircuits, uniqueCars }
     }, [laps])
 
-    function formatTime(ms: number) {
-        const minutes = Math.floor(ms / 60000)
-        const seconds = Math.floor((ms % 60000) / 1000)
-        const milliseconds = Math.floor((ms % 1000) / 10)
-        return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`
-    }
 
     // Generate consistent colors for circuits
     const getCircuitColor = (index: number) => {

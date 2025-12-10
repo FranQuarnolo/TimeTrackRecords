@@ -11,6 +11,7 @@ import { Circuit, LapTime } from "@/types"
 import { motion, AnimatePresence } from "framer-motion"
 import { Header } from "@/components/layout/header"
 import { useACConnection } from "@/hooks/useACConnection"
+import { formatTime } from "@/lib/utils"
 import { ConnectionStatus } from "@/components/live-timing/connection-status"
 import { TelemetryDisplay } from "@/components/live-timing/telemetry-display"
 import { SessionControls } from "@/components/live-timing/session-controls"
@@ -41,12 +42,6 @@ export default function LiveTimingPage() {
     const [laps, setLaps] = React.useState<number[]>([])
     const [sessionBest, setSessionBest] = React.useState<number | null>(null)
 
-    const formatTime = (ms: number) => {
-        const minutes = Math.floor(ms / 60000)
-        const seconds = Math.floor((ms % 60000) / 1000)
-        const milliseconds = Math.floor((ms % 1000) / 10)
-        return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`
-    }
 
     const handleStartStop = () => setIsRunning(!isRunning)
 
