@@ -2,7 +2,7 @@
 import { useStore } from "@/lib/store";
 import { formatTime, cn } from "@/lib/utils";
 import { SessionType, LapTime } from "@/types";
-import { ChevronDown, ChevronRight, Trophy, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Trophy, Trash2, FileText, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,8 +28,11 @@ interface TimeListProps {
 }
 
 export function TimeList({ type }: TimeListProps) {
-    const { laps, circuits, removeLap } = useStore();
+    const { laps, circuits, removeLap, setups } = useStore();
     const [expandedCircuits, setExpandedCircuits] = useState<Record<string, boolean>>({});
+
+    // Setup interaction state
+    const [viewingSetupId, setViewingSetupId] = useState<string | null>(null);
 
     // Delete interaction state
     const [selectedLap, setSelectedLap] = useState<LapTime | null>(null);
@@ -175,6 +178,18 @@ export function TimeList({ type }: TimeListProps) {
                                                                 <span className="text-xs text-white/50 font-medium uppercase tracking-wider">
                                                                     {lap.carModel || 'Unknown Car'}
                                                                 </span>
+                                                                {lap.setupId && (
+                                                                    <div
+                                                                        className="mt-1 flex items-center gap-1 text-[10px] text-primary/80 font-bold uppercase tracking-wider cursor-pointer hover:text-primary hover:underline"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setViewingSetupId(lap.setupId!);
+                                                                        }}
+                                                                    >
+                                                                        <Settings2 className="h-3 w-3" />
+                                                                        <span>Ver Setup</span>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                         <span className="text-[10px] text-white/30 font-mono">
@@ -250,6 +265,74 @@ export function TimeList({ type }: TimeListProps) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Setup Details Drawer */}
+            <Drawer open={!!viewingSetupId} onOpenChange={(open) => !open && setViewingSetupId(null)}>
+                <DrawerContent className="bg-[#0a0a0a] border-t border-white/10 text-white h-[60vh]">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
+
+                    {(() => {
+                        const setup = setups.find(s => s.id === viewingSetupId);
+                        if (!setup) return null;
+
+                        return (
+                            <div className="flex flex-col h-full">
+                                <DrawerHeader className="border-b border-white/10 pb-6 pt-6 relative z-10">
+                                    <DrawerTitle className="text-center text-3xl font-black italic uppercase tracking-tighter flex items-center justify-center gap-3">
+                                        <FileText className="h-8 w-8 text-primary" />
+                                        Setup Detalles
+                                    </DrawerTitle>
+                                    <DrawerDescription className="text-center text-white/50 font-mono uppercase tracking-widest">
+                                        {setup.name}
+                                    </DrawerDescription>
+                                </DrawerHeader>
+
+                                <div className="flex-1 overflow-y-auto p-6 space-y-6 relative z-10">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+                                            <span className="text-xs text-white/40 uppercase tracking-wider font-bold block mb-1">Neumáticos</span>
+                                            <span className="text-lg font-mono font-bold text-white">{setup.tires}</span>
+                                        </div>
+                                        <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+                                            <span className="text-xs text-white/40 uppercase tracking-wider font-bold block mb-1">Combustible</span>
+                                            <span className="text-lg font-mono font-bold text-white">{setup.fuel} L</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+                                        <span className="text-xs text-white/40 uppercase tracking-wider font-bold block mb-3">Presiones (PSI)</span>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-white/60 font-mono text-sm">FL</span>
+                                                <span className="text-primary font-bold font-mono">{setup.pressure.fl}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-primary font-bold font-mono text-right">{setup.pressure.fr}</span>
+                                                <span className="text-white/60 font-mono text-sm">FR</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-white/60 font-mono text-sm">RL</span>
+                                                <span className="text-primary font-bold font-mono">{setup.pressure.rl}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-primary font-bold font-mono text-right">{setup.pressure.rr}</span>
+                                                <span className="text-white/60 font-mono text-sm">RR</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {setup.notes && (
+                                        <div className="bg-white/5 p-4 rounded-xl border border-white/10">
+                                            <span className="text-xs text-white/40 uppercase tracking-wider font-bold block mb-2">Notas</span>
+                                            <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">{setup.notes}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })()}
+                </DrawerContent>
+            </Drawer>
         </>
     );
 }
