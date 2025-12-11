@@ -94,17 +94,24 @@ if __name__ == "__main__":
     port = 8000
     url = f"ws://{ip}:{port}/ws"
     
-    print("\n" + "="*50)
-    print(f" AC BRIDGE INICIADO")
-    print("="*50)
+    print("\n" + "="*60)
+    print(f" 🏎️  AC BRIDGE INICIADO")
+    print("="*60)
     print(f" IP Local: {ip}")
     print(f" URL WebSocket: {url}")
-    print("="*50)
-    print(" IMPORTANTE: Accede a la web app vía HTTP (no HTTPS)")
-    print(f" Ejemplo: http://{ip}:3000")
-    print("="*50 + "\n")
+    print("="*60)
+    print(" ⚠️  IMPORTANTE - LEER SI NO CONECTA:")
+    print(" 1. Tu celular y esta PC deben estar en el MISMO WiFi.")
+    print(" 2. Si usas VPN, desactívala.")
+    print(" 3. Revisa el Firewall de Windows:")
+    print("    - Asegúrate de que 'python' o 'main' tenga permisos.")
+    print("    - Si tu red está como 'Pública', cámbiala a 'Privada'.")
+    print("="*60)
+    print(" Accede a la web app vía HTTP (no HTTPS):")
+    print(f" 👉 http://{ip}:3000")
+    print("="*60 + "\n")
     
-    print("Escanea este código QR con tu celular o ingresa la IP:")
+    print("Escanea este código QR con tu celular:")
     print_qr(url)
     
     # Auto-open browser

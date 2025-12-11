@@ -114,7 +114,21 @@ export const useACConnection = () => {
 
                 if (!connectionEstablished) {
                     toast.error("No se pudo conectar", {
-                        description: "Verifica que el puente esté corriendo y la IP sea correcta. Revisa el Firewall."
+                        description: "No se encontró el puente de Assetto Corsa.",
+                        duration: 10000,
+                        action: {
+                            label: "Ayuda",
+                            onClick: () => {
+                                alert(
+                                    "Pasos para solucionar problemas:\n\n" +
+                                    "1. Asegúrate de que el archivo 'ac_bridge.py' (o el EXE) esté corriendo en tu PC.\n" +
+                                    "2. Verifica que tu celular y la PC estén en la MISMA red WiFi.\n" +
+                                    "3. Revisa el Firewall de Windows en tu PC: permite la conexión para 'python' o el programa del puente.\n" +
+                                    "4. Si usas VPN en el celular o PC, desactívala.\n" +
+                                    "5. Verifica que la IP ingresada sea correcta."
+                                );
+                            }
+                        }
                     });
                 } else {
                     toast("Desconectado del puente", {
