@@ -48,7 +48,9 @@ export const useACConnection = () => {
                     action: {
                         label: "Cambiar a HTTP",
                         onClick: () => {
-                            window.location.href = window.location.href.replace("https://", "http://");
+                            const url = new URL(window.location.href);
+                            url.protocol = "http:";
+                            window.location.href = url.toString();
                         }
                     }
                 });
